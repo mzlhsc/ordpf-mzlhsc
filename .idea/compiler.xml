@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Annotation profile for ordpf-mzlhsc" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.48/lombok-1.18.48.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.48/lombok-1.18.48.jar" />
+        </processorPath>
+        <module name="common-service" />
+        <module name="ordpf-auth" />
+        <module name="shop-service" />
+        <module name="user-service" />
+        <module name="ctgy-serivce" />
+        <module name="ordpf-common" />
+        <module name="setmeal-service" />
+        <module name="dish-service" />
+        <module name="ordpf-api" />
+        <module name="emp-service" />
+        <module name="ordpf-gateway" />
+        <module name="report-service" />
+        <module name="order-service" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel target="25">
+      <module name="order" target="25" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="common-service" options="-parameters" />
+      <module name="ctgy-serivce" options="-parameters" />
+      <module name="dish-service" options="-parameters" />
+      <module name="emp-service" options="-parameters" />
+      <module name="order" options="-parameters" />
+      <module name="order-service" options="-parameters" />
+      <module name="ordpf-api" options="-parameters" />
+      <module name="ordpf-auth" options="-parameters" />
+      <module name="ordpf-common" options="-parameters" />
+      <module name="ordpf-gateway" options="-parameters" />
+      <module name="ordpf-mzlhsc" options="" />
+      <module name="report-service" options="-parameters" />
+      <module name="setmeal-service" options="-parameters" />
+      <module name="shop-service" options="-parameters" />
+      <module name="user-service" options="-parameters" />
+    </option>
+  </component>
+</project>

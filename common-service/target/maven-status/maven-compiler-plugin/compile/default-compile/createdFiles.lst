@@ -1,0 +1,4 @@
+com\mzlhsc\common\controller\admin\CommonController.class
+com\mzlhsc\common\utils\AliyunOSSOperator.class
+com\mzlhsc\common\commonApplication.class
+com\mzlhsc\common\properties\AliyunOSSProperties.class

@@ -1,0 +1,7 @@
+mzlhsc:
+  # 密钥
+  jwt:
+    location: /ordpf-auth/src/main/resources/mzlhsc.jks # 秘钥地址
+    alias: mzlhsc # 秘钥别名
+    password: mzlhsc111 # 秘钥文件密码
+    token-t-t-l: 30m # 登录有效期

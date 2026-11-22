@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$APPLICATION_HOME_DIR$/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/common-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ctgy-serivce/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/dish-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/emp-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/order-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/order/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ordpf-api/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ordpf-auth/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ordpf-common/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ordpf-gateway/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/report-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/setmeal-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/shop-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/user-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../src/main/java" charset="UTF-8" />
+  </component>
+</project>

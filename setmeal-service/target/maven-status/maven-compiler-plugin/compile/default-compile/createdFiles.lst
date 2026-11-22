@@ -1,0 +1,17 @@
+com\mzlhsc\setmeal\domain\dto\SetmealPageQueryDTO.class
+com\mzlhsc\setmeal\domain\vo\SetmealVO.class
+com\mzlhsc\setmeal\mapper\SetmealDishMapper.class
+com\mzlhsc\setmeal\setmealApplication.class
+com\mzlhsc\setmeal\mapper\SetmealMapper.class
+com\mzlhsc\setmeal\domain\po\Setmeal$SetmealBuilder.class
+com\mzlhsc\setmeal\domain\vo\SetmealVO$SetmealVOBuilder.class
+com\mzlhsc\setmeal\domain\po\SetmealDish.class
+com\mzlhsc\setmeal\constant\StatusConstant.class
+com\mzlhsc\setmeal\controller\user\SetmealController.class
+com\mzlhsc\setmeal\service\impl\SetmealServiceImpl.class
+com\mzlhsc\setmeal\controller\admin\SetmealController.class
+com\mzlhsc\setmeal\domain\po\Setmeal.class
+com\mzlhsc\setmeal\domain\po\SetmealDish$SetmealDishBuilder.class
+com\mzlhsc\setmeal\service\ISetmealService.class
+com\mzlhsc\setmeal\domain\dto\SetmealDTO.class
+com\mzlhsc\setmeal\controller\inner\SetmealInnerController.class

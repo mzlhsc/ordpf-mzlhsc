@@ -1,0 +1,14 @@
+D:\Jobs\Project\ordpf-mzlhsc\user-service\src\main\java\com\mzlhsc\user\controller\inner\UserInnerController.java
+D:\Jobs\Project\ordpf-mzlhsc\user-service\src\main\java\com\mzlhsc\user\controller\user\AddressBookController.java
+D:\Jobs\Project\ordpf-mzlhsc\user-service\src\main\java\com\mzlhsc\user\controller\user\UserController.java
+D:\Jobs\Project\ordpf-mzlhsc\user-service\src\main\java\com\mzlhsc\user\domain\dto\UserLoginDTO.java
+D:\Jobs\Project\ordpf-mzlhsc\user-service\src\main\java\com\mzlhsc\user\domain\po\AddressBook.java
+D:\Jobs\Project\ordpf-mzlhsc\user-service\src\main\java\com\mzlhsc\user\domain\po\User.java
+D:\Jobs\Project\ordpf-mzlhsc\user-service\src\main\java\com\mzlhsc\user\domain\vo\UserLoginVo.java
+D:\Jobs\Project\ordpf-mzlhsc\user-service\src\main\java\com\mzlhsc\user\mapper\AddressBookMapper.java
+D:\Jobs\Project\ordpf-mzlhsc\user-service\src\main\java\com\mzlhsc\user\mapper\UserMapper.java
+D:\Jobs\Project\ordpf-mzlhsc\user-service\src\main\java\com\mzlhsc\user\service\IAddressBookService.java
+D:\Jobs\Project\ordpf-mzlhsc\user-service\src\main\java\com\mzlhsc\user\service\impl\AddressBookServiceImpl.java
+D:\Jobs\Project\ordpf-mzlhsc\user-service\src\main\java\com\mzlhsc\user\service\impl\UserServiceImpl.java
+D:\Jobs\Project\ordpf-mzlhsc\user-service\src\main\java\com\mzlhsc\user\service\IUserService.java
+D:\Jobs\Project\ordpf-mzlhsc\user-service\src\main\java\com\mzlhsc\user\userApplication.java

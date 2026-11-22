@@ -1,0 +1,4 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.mzlhsc.common.config.MyBatisConfig,\
+  com.mzlhsc.common.config.RedisConfiguration,\
+  com.mzlhsc.common.config.WebMvcConfig

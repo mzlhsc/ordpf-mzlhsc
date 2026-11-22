@@ -1,0 +1,46 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: ctgy-serivce # 服务名称（必须和网关里 lb://ctgy-serivce 一致）
+
+  profiles:
+    active: dev
+
+  # 从 Nacos 配置中心引入共享配置（Spring Cloud 2021+ 官方写法，取代 bootstrap.yaml）
+  config:
+    import:
+      - optional:nacos:shared-jdbc.yaml
+      - optional:nacos:shared-redis.yaml
+      - optional:nacos:shared-log.yaml
+      - optional:nacos:shared-swagger.yaml
+
+  cloud:
+    nacos:
+      server-addr: 127.0.0.1:8848 # 注册中心 + 配置中心地址
+
+  main:
+    allow-circular-references: true
+
+
+  # 文件上传大小限制
+  servlet:
+    multipart:
+      #最大单个文件大小
+      max-file-size: 10MB
+      #最大请求大小(包括所有文件和表单数据)
+      max-request-size: 100MB
+
+  # 允许把单个字符串当作数组接收（口味 value 传 "无糖" 或 ["无糖"] 都能解析）
+  jackson:
+    deserialization:
+      accept-single-value-as-array: true
+
+# 以下配置各服务不同，不能放进共享配置
+mybatis-plus:
+  type-aliases-package: com.mzlhsc.ctgy.domain.po
+  global-config:
+    db-config:
+      id-type: auto # 全局id类型为自增长
+  mapper-locations: "classpath*:/mapper/**/*.xml"

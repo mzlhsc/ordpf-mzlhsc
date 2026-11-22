@@ -1,0 +1,6 @@
+com\mzlhsc\gateway\config\SecurityConfig.class
+com\mzlhsc\gateway\filter\PrintAnyGatewayFilterFactory$Config.class
+com\mzlhsc\gateway\filter\AuthGlobalFilter.class
+com\mzlhsc\gateway\filter\PrintAnyGatewayFilterFactory.class
+com\mzlhsc\gateway\gatewayApplication.class
+com\mzlhsc\gateway\config\AuthProperties.class

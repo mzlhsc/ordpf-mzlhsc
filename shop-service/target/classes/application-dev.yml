@@ -1,0 +1,13 @@
+sky:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    host: localhost
+    port: 3306
+    database: sky_take_out
+    username: root
+    password: root
+  redis:
+    host: localhost
+    port: 6379
+    # 本机 Redis 默认没有密码，留空即可；设置了 requirepass 才填对应密码
+    password: root
