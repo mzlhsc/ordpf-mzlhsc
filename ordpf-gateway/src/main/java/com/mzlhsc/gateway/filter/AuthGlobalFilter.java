@@ -28,8 +28,9 @@ import java.util.List;
 @EnableConfigurationProperties(AuthProperties.class)
 public class AuthGlobalFilter implements GlobalFilter , Ordered {
 
-    /** 管理端请求头：携带员工（admin）令牌 */
+    /** 管理端请求头：携带员工（admin）令牌（兼容 zmlhsc / mzlhsc 两种拼写） */
     private static final String HEADER_ADMIN = "zmlhsc";
+    private static final String HEADER_ADMIN_ALT = "mzlhsc";
     /** 用户端请求头：携带用户（user）令牌 */
     private static final String HEADER_USER = "authorization";
 
@@ -61,6 +62,9 @@ public class AuthGlobalFilter implements GlobalFilter , Ordered {
         // 3.根据请求头判断身份：zmlhsc -> 管理端，authorization -> 用户端
         HttpHeaders headers = request.getHeaders();
         List<String> tokens = headers.get(HEADER_ADMIN);
+        if (CollectionUtils.isEmpty(tokens)) {
+            tokens = headers.get(HEADER_ADMIN_ALT);
+        }
         int identity;
         if (!CollectionUtils.isEmpty(tokens)) {
             identity = IDENTITY_ADMIN;
@@ -80,16 +84,23 @@ public class AuthGlobalFilter implements GlobalFilter , Ordered {
                     : "用户令牌不能访问管理端接口");
         }
 
-        // 5.校验并解析token
+        // 5.校验并解析token（按身份读对应的载荷字段，防止员工令牌冒充用户）
         Long id;
         try {
-            id = jwtTool.parseToken(tokens.get(0));
+            id = identity == IDENTITY_ADMIN
+                    ? jwtTool.parseEmpToken(tokens.get(0))
+                    : jwtTool.parseUserToken(tokens.get(0));
         } catch (UnauthorizedException e) {
             return reject(exchange, 401, e.getMessage());
         }
 
-        // 6.把身份信息透传给下游微服务（不需要可以删掉这三行）
+        // 6.把身份信息透传给下游微服务。
+        //    必须先清掉客户端自带的 empId / userId，否则用户端可以伪造 empId 冒充管理员。
         ServerHttpRequest newRequest = request.mutate()
+                .headers(h -> {
+                    h.remove("empId");
+                    h.remove("userId");
+                })
                 .header(identity == IDENTITY_ADMIN ? "empId" : "userId", id.toString())
                 .build();
 

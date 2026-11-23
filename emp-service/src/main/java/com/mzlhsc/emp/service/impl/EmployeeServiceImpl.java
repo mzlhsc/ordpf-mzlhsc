@@ -101,10 +101,15 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
      */
     @Override
     public PageDTO<Employee> PageQuery(EmployeePageQueryDTO employeePageQueryDTO) {
+        // 页码/每页条数兜底，避免前端不传时出现 current=0 的非法分页
+        int pageNo = employeePageQueryDTO.getPage() < 1 ? 1 : employeePageQueryDTO.getPage();
+        int pageSize = employeePageQueryDTO.getPageSize() < 1 ? 10 : employeePageQueryDTO.getPageSize();
         // 交由 MyBatis-Plus 的 PaginationInnerInterceptor 做物理分页
-        Page<Employee> page = new Page<>(employeePageQueryDTO.getPage(), employeePageQueryDTO.getPageSize());
+        Page<Employee> page = new Page<>(pageNo, pageSize);
         // 分页返回员工完整信息（文档要求返回 username/phone/sex/idNumber/status 等字段）
         employeeMapper.pageQuery(page, employeePageQueryDTO.getName());
+        // 密码属于敏感字段，不返回给前端
+        page.getRecords().forEach(employee -> employee.setPassword(null));
         return PageDTO.of(page);
     }
 

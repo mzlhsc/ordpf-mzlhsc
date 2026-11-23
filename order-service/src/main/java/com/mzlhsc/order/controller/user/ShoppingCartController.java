@@ -3,6 +3,8 @@ package com.mzlhsc.order.controller.user;
 
 import com.mzlhsc.common.result.R;
 import com.mzlhsc.common.context.UserContext;
+import com.mzlhsc.common.constant.MessageConstant;
+import com.mzlhsc.common.exception.BadRequestException;
 import com.mzlhsc.order.domain.dto.ShoppingCartDTO;
 import com.mzlhsc.order.domain.po.ShoppingCart;
 import com.mzlhsc.order.service.IShoppingCartService;
@@ -51,10 +53,13 @@ public class ShoppingCartController {
      */
     @GetMapping("/list")
     @Operation(summary = "查看购物车", description = "查询当前用户的购物车列表")
-    public R<List<ShoppingCart>> list(){
+    public R<List<ShoppingCart>> list() {
         log.info("查看购物车");
+        Long userId = requireUserId();
         return R.ok(shoppingCartService.lambdaQuery()
-                .eq(ShoppingCart::getUserId, UserContext.getCurrentId())
+                .eq(ShoppingCart::getUserId, userId)
+                .isNull(ShoppingCart::getDiningSessionId)
+                .orderByDesc(ShoppingCart::getCreateTime)
                 .list());
     }
 
@@ -79,7 +84,20 @@ public class ShoppingCartController {
     @Operation(summary = "清除购物车", description = "清空当前用户的购物车")
     public R<Void> clean() {
         log.info("清除购物车");
-        shoppingCartService.removeById(UserContext.getCurrentId());
+        Long userId = requireUserId();
+        // 按 user_id 删除，不能把 userId 当成购物车主键 id 删除
+        shoppingCartService.lambdaUpdate()
+                .eq(ShoppingCart::getUserId, userId)
+                .isNull(ShoppingCart::getDiningSessionId)
+                .remove();
         return R.ok();
+    }
+
+    private Long requireUserId() {
+        Long userId = UserContext.getCurrentId();
+        if (userId == null) {
+            throw new BadRequestException(MessageConstant.USER_NOT_LOGIN);
+        }
+        return userId;
     }
 }

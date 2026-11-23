@@ -76,7 +76,7 @@ public class SetmealInnerController {
     @Operation(description = "根据套餐id查询套餐内的菜品项")
     public List<SetmealDishItemDTO> listDishesBySetmealId(@PathVariable("setmealId") Long setmealId) {
         log.info("内部接口-根据套餐id查询套餐内菜品项: {}", setmealId);
-        List<SetmealDish> setmealDishes = setmealDishMapper.getByDishId(setmealId);
+        List<SetmealDish> setmealDishes = setmealDishMapper.getBySetmealId(setmealId);
         return setmealDishes.stream()
                 .map(setmealDish -> BeanUtil.copyProperties(setmealDish, SetmealDishItemDTO.class))
                 .toList();

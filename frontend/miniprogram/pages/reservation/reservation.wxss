@@ -1,0 +1,158 @@
+.reservation-page {
+  min-height: 100vh;
+  padding: 24rpx 28rpx calc(180rpx + env(safe-area-inset-bottom));
+}
+
+.res-hero {
+  position: relative;
+  overflow: hidden;
+  padding: 32rpx;
+  border-radius: 28rpx;
+  background: linear-gradient(140deg, #fff3e7, #ffe3d0);
+  color: #5c3c2b;
+  border: 1rpx solid #ffe1cb;
+}
+
+.res-eyebrow {
+  color: #b8805f;
+  font-size: 19rpx;
+  letter-spacing: 3rpx;
+}
+
+.res-title {
+  margin-top: 12rpx;
+  font-size: 44rpx;
+  font-weight: 800;
+  letter-spacing: 1rpx;
+}
+
+.res-desc {
+  margin-top: 8rpx;
+  color: #a2765c;
+  font-size: 22rpx;
+}
+
+.res-deco {
+  position: absolute;
+  right: 26rpx;
+  bottom: 22rpx;
+  width: 130rpx;
+  height: 100rpx;
+  opacity: 0.5;
+}
+
+.deco-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 22rpx;
+  height: 1rpx;
+  background: #dfa987;
+}
+
+.deco-dot {
+  position: absolute;
+  right: 6rpx;
+  bottom: 0;
+  width: 48rpx;
+  height: 48rpx;
+  border: 1rpx solid #dfa987;
+  border-radius: 50%;
+  color: #c88963;
+  font-size: 22rpx;
+  line-height: 46rpx;
+  text-align: center;
+}
+
+.form-card {
+  margin-top: 20rpx;
+  overflow: hidden;
+  border-radius: 24rpx;
+  background: #fff;
+  box-shadow: 0 8rpx 24rpx rgba(75, 47, 31, 0.055);
+}
+
+.form-row {
+  display: flex;
+  align-items: center;
+  min-height: 106rpx;
+  margin: 0 24rpx;
+  border-bottom: 1rpx solid #f3eee9;
+}
+
+.form-row.last {
+  border-bottom: none;
+}
+
+.form-row.remark-row {
+  align-items: flex-start;
+  padding: 24rpx 0;
+}
+
+.form-label {
+  width: 160rpx;
+  flex-shrink: 0;
+  color: #5f574f;
+  font-size: 26rpx;
+  font-weight: 600;
+}
+
+.form-value {
+  flex: 1;
+}
+
+.value-text {
+  color: #2f2b27;
+  font-size: 26rpx;
+  text-align: right;
+}
+
+.form-input {
+  flex: 1;
+  min-width: 0;
+  height: 70rpx;
+  font-size: 26rpx;
+  text-align: right;
+}
+
+.remark-input {
+  flex: 1;
+  min-width: 0;
+  height: 110rpx;
+  font-size: 25rpx;
+  line-height: 1.5;
+  text-align: right;
+}
+
+.ph {
+  color: #b3aba4;
+  font-size: 24rpx;
+}
+
+.notice-card {
+  margin-top: 20rpx;
+  padding: 24rpx;
+  border-radius: 20rpx;
+  background: #fffaf6;
+  border: 1rpx solid #f6e9df;
+}
+
+.notice-title {
+  margin-bottom: 8rpx;
+  color: #9d765d;
+  font-size: 23rpx;
+  font-weight: 700;
+}
+
+.notice-line {
+  color: #ab9181;
+  font-size: 21rpx;
+  line-height: 1.8;
+}
+
+.submit-bar {
+  position: fixed;
+  left: 28rpx;
+  right: 28rpx;
+  bottom: calc(24rpx + env(safe-area-inset-bottom));
+}

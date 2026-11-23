@@ -1,15 +1,14 @@
 package com.mzlhsc.shop;
 
-import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.scheduling.annotation.EnableScheduling;
 
+/**
+ * 店铺服务启动类。
+ * <p>
+ * 营业状态存放在 Redis，本服务没有数据库 Mapper，因此不需要 @MapperScan。
+ */
 @SpringBootApplication
-@MapperScan("com.mzlhsc.shop.mapper")
-@EnableScheduling
-@EnableCaching
 public class shopApplication {
 
     public static void main(String[] args) {

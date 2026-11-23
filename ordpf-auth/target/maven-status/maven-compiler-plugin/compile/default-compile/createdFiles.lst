@@ -1,4 +1,0 @@
-com\mzlhsc\auth\config\JwtAutoConfiguration.class
-com\mzlhsc\auth\config\JwtProperties.class
-com\mzlhsc\auth\exception\UnauthorizedException.class
-com\mzlhsc\auth\util\JwtTool.class

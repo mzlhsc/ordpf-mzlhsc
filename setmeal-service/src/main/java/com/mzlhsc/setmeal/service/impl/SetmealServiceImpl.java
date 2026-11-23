@@ -5,8 +5,9 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.spring.service.impl.ServiceImpl;
 import com.mzlhsc.api.vo.DishItemVO;
 import com.mzlhsc.common.constant.MessageConstant;
+import com.mzlhsc.common.exception.BadRequestException;
 import com.mzlhsc.common.exception.BizIllegalException;
-import com.mzlhsc.common.exception.CommonException;
+import com.mzlhsc.common.exception.NotFoundException;
 import com.mzlhsc.common.result.PageDTO;
 import com.mzlhsc.setmeal.constant.StatusConstant;
 import com.mzlhsc.setmeal.domain.dto.SetmealDTO;
@@ -21,8 +22,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * <p>
@@ -35,20 +40,24 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> implements ISetmealService {
+
     private final SetmealMapper setmealMapper;
-
     private final SetmealDishMapper setmealDishMapper;
-
 
     /**
      * 添加套餐和对应菜品
-     * @param setmealDTO
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void saveInDish(SetmealDTO setmealDTO) {
-        Setmeal setmeal = new Setmeal();
-        BeanUtil.copyProperties(setmealDTO,Setmeal.class);
+        validateSetmeal(setmealDTO);
+
+        // 必须接收 copyProperties 的返回值，否则套餐对象是空的
+        Setmeal setmeal = BeanUtil.copyProperties(setmealDTO, Setmeal.class);
+        setmeal.setId(null);
+        if (setmeal.getStatus() == null) {
+            setmeal.setStatus(StatusConstant.DISABLE);
+        }
         //添加套餐
         save(setmeal);
 
@@ -56,32 +65,39 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impl
         Long setmealId = setmeal.getId();
 
         //添加套餐菜品
-        insertBatch(setmealDTO.getSetmealDishes(),setmealId);
+        insertBatch(setmealDTO.getSetmealDishes(), setmealId);
     }
 
     /**
      * 套餐分页查询
-     * @param setmealPageQueryDTO
-     * @return
      */
     @Override
     public PageDTO<SetmealVO> pageQuery(SetmealPageQueryDTO setmealPageQueryDTO) {
+        int pageNo = setmealPageQueryDTO.getPage() < 1 ? 1 : setmealPageQueryDTO.getPage();
+        int pageSize = setmealPageQueryDTO.getPageSize() < 1 ? 10 : setmealPageQueryDTO.getPageSize();
         // 第一个参数为 IPage 时，MyBatis-Plus 分页拦截器自动拼接 count 与 limit
-        Page<SetmealVO> page = new Page<>(setmealPageQueryDTO.getPage(), setmealPageQueryDTO.getPageSize());
-        setmealMapper.pageQuery(page, setmealPageQueryDTO);
+        Page<SetmealVO> page = new Page<>(pageNo, pageSize);
+        // Mapper 返回 List 时 MyBatis-Plus 只做物理分页、不会回填 records，这里手动回填
+        List<SetmealVO> records = setmealMapper.pageQuery(page, setmealPageQueryDTO);
+        page.setRecords(records);
         return PageDTO.of(page);
     }
 
-
     /**
      * 修改套餐和对应菜品
-     * @param setmealDTO
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateInDish(SetmealDTO setmealDTO) {
-        Setmeal setmeal = new Setmeal();
-        BeanUtil.copyProperties(setmealDTO,Setmeal.class);
+        if (setmealDTO == null || setmealDTO.getId() == null) {
+            throw new BadRequestException("套餐id不能为空");
+        }
+        if (getById(setmealDTO.getId()) == null) {
+            throw new NotFoundException(MessageConstant.SETMEAL_NOT_FOUND);
+        }
+
+        // 必须接收 copyProperties 的返回值
+        Setmeal setmeal = BeanUtil.copyProperties(setmealDTO, Setmeal.class);
         //修改套餐
         updateById(setmeal);
 
@@ -89,24 +105,28 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impl
         Long setmealId = setmeal.getId();
 
         //删除套餐菜品
-        setmealDishMapper.deletBySetmalId(setmealId);
+        setmealDishMapper.deleteBySetmealId(setmealId);
 
         //添加套餐菜品
-        insertBatch(setmealDTO.getSetmealDishes(),setmealId);
-
+        insertBatch(setmealDTO.getSetmealDishes(), setmealId);
     }
 
     /**
      * 删除套餐和关联的菜品
-     * @param ids
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void removeNoDishByIds(List<Long> ids) {
+        if (CollectionUtils.isEmpty(ids)) {
+            throw new BadRequestException("套餐id不能为空");
+        }
         //判断当前套餐是否能删除--是否存在在售套餐
         List<Setmeal> setmeals = listByIds(ids);
-        for(Setmeal setmeal : setmeals){
-            if(setmeal.getStatus() == StatusConstant.ENABLE){
+        if (setmeals.size() != ids.size()) {
+            throw new NotFoundException(MessageConstant.SETMEAL_NOT_FOUND);
+        }
+        for (Setmeal setmeal : setmeals) {
+            if (Objects.equals(setmeal.getStatus(), StatusConstant.ENABLE)) {
                 //当前套餐处于售中,不能删除
                 throw new BizIllegalException(MessageConstant.SETMEAL_ON_SALE);
             }
@@ -115,52 +135,65 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impl
         removeByIds(ids);
 
         //根据套餐id集合批量删除关联的菜品数据
-        setmealDishMapper.deletBySetmalIds(ids);
-
-
+        setmealDishMapper.deleteBySetmealIds(ids);
     }
 
     /**
      * 根据套餐id查询菜品选项
-     * @param id
-     * @return
      */
     @Override
     public List<DishItemVO> getDishItemById(Long id) {
+        if (id == null) {
+            throw new BadRequestException("套餐id不能为空");
+        }
         return setmealMapper.getDishItemBySetmealId(id);
     }
 
     /**
      * 根据id查询套餐及其关联的菜品关系
-     * @param id
-     * @return
      */
     @Override
     public SetmealVO getByIdWithDishes(Long id) {
+        if (id == null) {
+            throw new BadRequestException("套餐id不能为空");
+        }
         Setmeal setmeal = this.getById(id);
         if (setmeal == null) {
-            // 套餐不存在
-            throw new CommonException(MessageConstant.SETMEAL_NOT_FOUND, 404);
+            throw new NotFoundException(MessageConstant.SETMEAL_NOT_FOUND);
         }
         SetmealVO setmealVO = new SetmealVO();
         BeanUtils.copyProperties(setmeal, setmealVO);
-        setmealVO.setSetmealDishes(setmealDishMapper.getByDishId(id));
+        setmealVO.setSetmealDishes(setmealDishMapper.getBySetmealId(id));
         return setmealVO;
     }
 
-
-
     /**
      * 添加套餐菜品
-     * @param dishes
-     * @param setmealId
      */
-    public void insertBatch(List<SetmealDish> dishes,Long setmealId){
-        if (dishes != null  &&  dishes.size() >0){
-            dishes.forEach(setmealDish ->  setmealDish.setSetmealId(setmealId));
-            //向菜品表插入n条数据
-            setmealDishMapper.insertBatch(dishes);
+    public void insertBatch(List<SetmealDish> dishes, Long setmealId) {
+        if (CollectionUtils.isEmpty(dishes)) {
+            return;
+        }
+        dishes.forEach(setmealDish -> {
+            setmealDish.setId(null);
+            setmealDish.setSetmealId(setmealId);
+        });
+        //向菜品表插入n条数据
+        setmealDishMapper.insertBatch(dishes);
+    }
 
+    private void validateSetmeal(SetmealDTO dto) {
+        if (dto == null || !StringUtils.hasText(dto.getName())) {
+            throw new BadRequestException("套餐名称不能为空");
+        }
+        if (dto.getCategoryId() == null) {
+            throw new BadRequestException("套餐分类不能为空");
+        }
+        if (dto.getPrice() == null || dto.getPrice().compareTo(BigDecimal.ZERO) < 0) {
+            throw new BadRequestException("套餐价格不合法");
+        }
+        if (CollectionUtils.isEmpty(dto.getSetmealDishes())) {
+            throw new BadRequestException("套餐菜品不能为空");
         }
     }
 

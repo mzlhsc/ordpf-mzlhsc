@@ -36,8 +36,11 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
      */
     @Override
     public PageDTO<Category> pageQuery(CategoryPageQueryDTO categoryPageQueryDTO) {
+        // 页码/每页条数兜底，避免前端不传时出现 current=0 的非法分页
+        int pageNo = categoryPageQueryDTO.getPage() < 1 ? 1 : categoryPageQueryDTO.getPage();
+        int pageSize = categoryPageQueryDTO.getPageSize() < 1 ? 10 : categoryPageQueryDTO.getPageSize();
         // 交由 MyBatis-Plus 的 PaginationInnerInterceptor 做物理分页
-        Page<Category> page = new Page<>(categoryPageQueryDTO.getPage(), categoryPageQueryDTO.getPageSize());
+        Page<Category> page = new Page<>(pageNo, pageSize);
         lambdaQuery()
                 .like(StrUtil.isNotBlank(categoryPageQueryDTO.getName()), Category::getName, categoryPageQueryDTO.getName())
                 .eq(categoryPageQueryDTO.getType() != null, Category::getType, categoryPageQueryDTO.getType())

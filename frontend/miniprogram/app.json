@@ -1,0 +1,59 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/cart/cart",
+    "pages/checkout/checkout",
+    "pages/orders/orders",
+    "pages/order-detail/order-detail",
+    "pages/address/list",
+    "pages/address/edit",
+    "pages/dining/dining",
+    "pages/dining-menu/dining-menu",
+    "pages/session/session",
+    "pages/reservation/reservation",
+    "pages/reservation-list/reservation-list",
+    "pages/mine/mine"
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#fff8f2",
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "ordpf 餐饮",
+    "backgroundColor": "#f7f4ef",
+    "backgroundTextStyle": "dark"
+  },
+  "tabBar": {
+    "color": "#7a7f87",
+    "selectedColor": "#ff6b35",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "点餐",
+        "iconPath": "assets/tab-home.png",
+        "selectedIconPath": "assets/tab-home-on.png"
+      },
+      {
+        "pagePath": "pages/orders/orders",
+        "text": "订单",
+        "iconPath": "assets/tab-order.png",
+        "selectedIconPath": "assets/tab-order-on.png"
+      },
+      {
+        "pagePath": "pages/dining/dining",
+        "text": "堂食",
+        "iconPath": "assets/tab-dining.png",
+        "selectedIconPath": "assets/tab-dining-on.png"
+      },
+      {
+        "pagePath": "pages/mine/mine",
+        "text": "我的",
+        "iconPath": "assets/tab-mine.png",
+        "selectedIconPath": "assets/tab-mine-on.png"
+      }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}

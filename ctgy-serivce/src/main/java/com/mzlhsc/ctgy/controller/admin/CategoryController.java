@@ -1,8 +1,7 @@
 package com.mzlhsc.ctgy.controller.admin;
 
-
 import cn.hutool.core.bean.BeanUtil;
-
+import com.mzlhsc.common.exception.BadRequestException;
 import com.mzlhsc.common.result.PageDTO;
 import com.mzlhsc.ctgy.domain.dto.CategoryDTO;
 import com.mzlhsc.ctgy.domain.dto.CategoryPageQueryDTO;
@@ -12,13 +11,14 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 /**
  * <p>
- * 菜品及套餐分类 前端控制器
+ * 菜品及套餐分类 前端控制器（管理端）
  * </p>
  *
  * @author mzlhsc
@@ -27,104 +27,106 @@ import java.util.List;
 @RestController
 @RequestMapping("/admin/category")
 @RequiredArgsConstructor
-@Tag(name = "菜品及套餐分类" ,description = "照片")
+@Tag(name = "菜品及套餐分类", description = "照片")
 @Slf4j
 public class CategoryController {
 
     private final ICategoryService categoryService;
 
-
     /**
      * 添加菜品分类
-     * @param categoryDTO
-     * @return
      */
     @PostMapping
     @Operation(summary = "添加菜品分类")
-    public void save(@RequestBody CategoryDTO categoryDTO){
+    public void save(@RequestBody CategoryDTO categoryDTO) {
         log.info("添加菜品分类: {}", categoryDTO);
-
+        validate(categoryDTO);
         categoryService.save(BeanUtil.copyProperties(categoryDTO, Category.class)
                 .setStatus(1));
     }
 
-
     /**
      * 分页查询
-     * @param categoryPageQueryDTO
-     * @return
      */
     @GetMapping("/page")
     @Operation(summary = "分页查询")
-    public PageDTO<Category> page(CategoryPageQueryDTO categoryPageQueryDTO){
+    public PageDTO<Category> page(CategoryPageQueryDTO categoryPageQueryDTO) {
         log.info("分页查询: {}", categoryPageQueryDTO);
-
-
         return categoryService.pageQuery(categoryPageQueryDTO);
-
     }
 
     /**
-     * 根据类型查询分类
-     * @param type
-     * @return
+     * 根据类型查询分类（管理端返回启用 + 禁用的全部分类）
      */
     @GetMapping("/list")
     @Operation(summary = "根据类型查询分类")
-    public List<Category> list(Integer type){
+    public List<Category> list(Integer type) {
         log.info("根据类型查询分类: {}", type);
-
-//        List<Category> list = categoryService.listCategory(type);
-        List<Category> list = categoryService.lambdaQuery().eq(Category::getType,type).list();
-
-
-
-        return list;
+        return categoryService.lambdaQuery()
+                .eq(type != null, Category::getType, type)
+                .orderByAsc(Category::getSort)
+                .list();
     }
-
 
     /**
      * 修改菜品分类
-     * @param categoryDTO
-     * @return
      */
     @PutMapping
     @Operation(summary = "修改菜品分类")
-    public void upate(@RequestBody CategoryDTO categoryDTO){
+    public void update(@RequestBody CategoryDTO categoryDTO) {
         log.info("修改菜品分类: {}", categoryDTO);
-
-        categoryService.updateById(BeanUtil.copyProperties(categoryDTO,Category.class));
+        if (categoryDTO == null || categoryDTO.getId() == null) {
+            throw new BadRequestException("分类id不能为空");
+        }
+        if (categoryDTO.getName() != null && !StringUtils.hasText(categoryDTO.getName())) {
+            throw new BadRequestException("分类名称不能为空");
+        }
+        categoryService.updateById(BeanUtil.copyProperties(categoryDTO, Category.class));
     }
-
 
     /**
      * 根据id删除
-     * @param id
-     * @return
      */
     @DeleteMapping
     @Operation(summary = "根据id删除")
-    public void deletes(@RequestParam Long id){
+    public void deletes(@RequestParam Long id) {
         log.info("根据id删除: {}", id);
-
+        if (id == null) {
+            throw new BadRequestException("分类id不能为空");
+        }
         //删除没有菜品的菜品分类
         categoryService.removeNoDishByIds(id);
-
     }
 
     /**
      * 启用、禁用分类
-     * @param status
-     * @param id
-     * @return
      */
     @PostMapping("/status/{status}")
     @Operation(summary = "启用、禁用分类")
-    public void status(@PathVariable Integer status,Long id){
-        log.info("启用、禁用分类: {} {}", status,id);
-        // return void.success(categoryService.updateById(Category.builder().id(id).status(status).build()));
-        categoryService.lambdaUpdate().set(Category::getStatus,status).eq(Category::getId,id).
-                update();
+    public void status(@PathVariable Integer status, @RequestParam Long id) {
+        log.info("启用、禁用分类: {} {}", status, id);
+        if (id == null) {
+            throw new BadRequestException("分类id不能为空");
+        }
+        if (status == null || status != 0 && status != 1) {
+            throw new BadRequestException("分类状态不合法");
+        }
+        if (categoryService.getById(id) == null) {
+            throw new BadRequestException("分类不存在");
+        }
+        categoryService.lambdaUpdate()
+                .set(Category::getStatus, status)
+                .eq(Category::getId, id)
+                .update();
+    }
+
+    private void validate(CategoryDTO dto) {
+        if (dto == null || !StringUtils.hasText(dto.getName())) {
+            throw new BadRequestException("分类名称不能为空");
+        }
+        if (dto.getType() == null || dto.getType() != 1 && dto.getType() != 2) {
+            throw new BadRequestException("分类类型不合法");
+        }
     }
 
 }

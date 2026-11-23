@@ -1,4 +1,6 @@
+com.mzlhsc.common.config.CommonAutoConfiguration
 com.mzlhsc.common.config.WebMvcConfig
 com.mzlhsc.common.config.RedisConfiguration
+com.mzlhsc.common.config.RedissonConfiguration
 com.mzlhsc.common.config.MybatisConfig
 com.mzlhsc.common.config.PropertiesAutoConfiguration

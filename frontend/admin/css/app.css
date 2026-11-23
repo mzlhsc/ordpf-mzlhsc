@@ -1,0 +1,441 @@
+/* ==========================================================================
+   ordpf 餐饮 · 管理后台样式
+   配色对齐 sky 后台：主色 #ffc200 / 侧边栏 #20232a / 页面底色 #f3f4f7
+   ========================================================================== */
+
+:root {
+    --brand: #ffc200;
+    --brand-dark: #e6ae00;
+    --aside-bg: #20232a;
+    --aside-text: #bac0cd;
+    --page-bg: #f3f4f7;
+    --text-main: #20232a;
+    --text-sub: #818693;
+    --border: #ebeef5;
+    --danger: #f56c6c;
+    --success: #67c23a;
+    --warning: #e6a23c;
+
+    /* 覆盖 Element Plus 主题色 */
+    --el-color-primary: #ffc200;
+    --el-color-primary-light-3: #ffd54d;
+    --el-color-primary-light-5: #ffe080;
+    --el-color-primary-light-7: #ffecb3;
+    --el-color-primary-light-8: #fff2cc;
+    --el-color-primary-light-9: #fff9e6;
+    --el-color-primary-dark-2: #e6ae00;
+    --el-text-color-primary: #20232a;
+    --el-text-color-regular: #4a4f57;
+    --el-border-color-lighter: #ebeef5;
+    --el-font-size-base: 13px;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    font-family: "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+    font-size: 13px;
+    color: var(--text-main);
+    background: var(--page-bg);
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ============ 登录页 ============ */
+.login-page {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at 20% 20%, #3a3f4b 0%, #20232a 45%, #14161a 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.login-page::after {
+    content: "";
+    position: absolute;
+    width: 620px;
+    height: 620px;
+    right: -160px;
+    bottom: -220px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 194, 0, .18) 0%, transparent 62%);
+}
+
+.login-card {
+    width: 380px;
+    padding: 38px 36px 30px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 18px 50px rgba(0, 0, 0, .35);
+    position: relative;
+    z-index: 2;
+}
+
+.login-brand {
+    text-align: center;
+    margin-bottom: 26px;
+}
+
+.login-brand .logo {
+    width: 52px;
+    height: 52px;
+    border-radius: 12px;
+    background: var(--brand);
+    color: #20232a;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 52px;
+    margin: 0 auto 12px;
+}
+
+.login-brand h1 {
+    margin: 0;
+    font-size: 20px;
+    letter-spacing: 1px;
+}
+
+.login-brand p {
+    margin: 6px 0 0;
+    font-size: 12px;
+    color: var(--text-sub);
+}
+
+.login-tip {
+    margin-top: 16px;
+    font-size: 12px;
+    color: var(--text-sub);
+    text-align: center;
+    line-height: 1.7;
+}
+
+/* ============ 主框架 ============ */
+.layout {
+    display: flex;
+    height: 100%;
+}
+
+.aside {
+    width: 200px;
+    flex: 0 0 200px;
+    background: var(--aside-bg);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.aside .brand {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 18px;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: .5px;
+    border-bottom: 1px solid rgba(255, 255, 255, .06);
+}
+
+.aside .brand .dot {
+    width: 26px;
+    height: 26px;
+    border-radius: 7px;
+    background: var(--brand);
+    color: #20232a;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 26px;
+    text-align: center;
+}
+
+.menu {
+    padding: 10px 0;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 44px;
+    padding: 0 18px;
+    color: var(--aside-text);
+    font-size: 13.5px;
+    cursor: pointer;
+    transition: background .15s, color .15s;
+    user-select: none;
+}
+
+.menu-item:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, .05);
+}
+
+.menu-item.active {
+    background: var(--brand);
+    color: #20232a;
+    font-weight: 600;
+}
+
+.menu-item .ico {
+    width: 16px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.aside-foot {
+    padding: 12px 18px;
+    font-size: 11px;
+    color: #5c6270;
+    border-top: 1px solid rgba(255, 255, 255, .06);
+}
+
+.main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.header {
+    height: 60px;
+    flex: 0 0 60px;
+    background: #fff;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 22px;
+}
+
+.header .crumb {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.header .crumb small {
+    font-weight: 400;
+    color: var(--text-sub);
+    margin-left: 8px;
+    font-size: 12px;
+}
+
+.header .user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 13px;
+    color: var(--text-sub);
+}
+
+.avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--brand);
+    color: #20232a;
+    font-weight: 700;
+    line-height: 30px;
+    text-align: center;
+    font-size: 13px;
+}
+
+.content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 18px 20px 28px;
+}
+
+/* ============ 卡片 / 工具条 ============ */
+.card {
+    background: #fff;
+    border-radius: 8px;
+    padding: 16px 18px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, .04);
+    margin-bottom: 16px;
+}
+
+.card-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.card-title .sub {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--text-sub);
+}
+
+.toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+.toolbar .grow {
+    flex: 1;
+}
+
+.pager {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 14px;
+}
+
+/* ============ 统计卡 ============ */
+.stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 14px;
+    margin-bottom: 16px;
+}
+
+.stat {
+    background: #fff;
+    border-radius: 8px;
+    padding: 18px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, .04);
+    position: relative;
+    overflow: hidden;
+}
+
+.stat::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: var(--brand);
+}
+
+.stat .label {
+    color: var(--text-sub);
+    font-size: 12px;
+    margin-bottom: 10px;
+}
+
+.stat .value {
+    font-size: 24px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+.stat .value small {
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--text-sub);
+    margin-left: 3px;
+}
+
+/* ============ 表格微调 ============ */
+.el-table th.el-table__cell {
+    background: #fafafa !important;
+    color: #4a4f57;
+    font-weight: 600;
+}
+
+.el-table {
+    --el-table-border-color: var(--border);
+    --el-table-header-text-color: #4a4f57;
+}
+
+.thumb {
+    width: 46px;
+    height: 46px;
+    border-radius: 6px;
+    object-fit: cover;
+    background: #f3f4f7;
+    display: block;
+}
+
+.muted {
+    color: var(--text-sub);
+}
+
+.mono {
+    font-family: Consolas, Monaco, monospace;
+    font-size: 12px;
+}
+
+/* 订单菜品摘要 */
+.dishes {
+    max-width: 320px;
+    line-height: 1.6;
+    color: #4a4f57;
+    font-size: 12px;
+}
+
+/* 报表简易折线 */
+.spark {
+    width: 100%;
+    height: 150px;
+}
+
+.empty-block {
+    padding: 30px 0;
+    text-align: center;
+    color: var(--text-sub);
+    font-size: 13px;
+}
+
+/* ============ 堂食二维码 / 报表卡 ============ */
+.stat span {
+    display: block;
+    color: var(--text-sub);
+    font-size: 12px;
+    margin-bottom: 8px;
+}
+
+.stat b {
+    font-size: 24px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+.qr-wrap {
+    display: flex;
+    justify-content: center;
+    padding: 8px 0 12px;
+}
+
+.qr-box {
+    width: 220px;
+    min-height: 220px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px dashed #dcdfe6;
+    border-radius: 8px;
+    padding: 10px;
+    background: #fff;
+}
+
+.qr-tip {
+    font-size: 12px;
+    color: #8a919f;
+    word-break: break-all;
+    line-height: 1.7;
+    text-align: center;
+}
+
+.el-tabs__header {
+    margin-bottom: 14px;
+}
+

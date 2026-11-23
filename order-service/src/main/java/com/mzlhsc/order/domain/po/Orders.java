@@ -121,5 +121,11 @@ public class Orders implements Serializable {
     @Schema(description = "餐具数量状态  1按餐量提供  0选择具体数量")
     private Integer tablewareStatus;
 
+    @Schema(description = "订单类型 1外卖 2堂食")
+    private Integer orderType;
+
+    @Schema(description = "堂食会话id")
+    private Long diningSessionId;
+
 
 }

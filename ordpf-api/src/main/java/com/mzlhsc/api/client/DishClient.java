@@ -45,4 +45,22 @@ public interface DishClient {
      */
     @GetMapping("/countByStatus")
     Integer countByStatus(@RequestParam("status") Integer status);
+
+    /**
+     * 查询菜品剩余库存
+     */
+    @GetMapping("/stock/{dishId}")
+    Integer getStock(@PathVariable("dishId") Long dishId);
+
+    /**
+     * 扣减库存（内部使用，失败会返回 Feign 异常）
+     */
+    @PostMapping("/stock/deduct")
+    Boolean deductStock(@RequestParam("dishId") Long dishId, @RequestParam("number") Integer number);
+
+    /**
+     * 回补库存（取消/拒单）
+     */
+    @PostMapping("/stock/restore")
+    Boolean restoreStock(@RequestParam("dishId") Long dishId, @RequestParam("number") Integer number);
 }

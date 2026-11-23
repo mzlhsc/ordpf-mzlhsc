@@ -1,0 +1,48 @@
+<view class="res-list-page">
+  <view class="res-list" wx:if="{{list.length}}">
+    <view class="res-card" wx:for="{{list}}" wx:key="id">
+      <view class="res-top">
+        <view class="res-date">
+          <view class="date-day">{{item.dateText}}</view>
+          <view class="date-time">{{item.timeText}}</view>
+        </view>
+        <view class="res-status status-{{item.status}}">{{item.statusText}}</view>
+      </view>
+      <view class="res-body">
+        <view class="res-row">
+          <text class="res-label">桌台</text>
+          <text class="res-value">{{item.tableName}}</text>
+        </view>
+        <view class="res-row">
+          <text class="res-label">人数</text>
+          <text class="res-value">{{item.guestCount}} 人</text>
+        </view>
+        <view class="res-row">
+          <text class="res-label">联系人</text>
+          <text class="res-value">{{item.contactName}} · {{item.contactPhone}}</text>
+        </view>
+        <view class="res-row" wx:if="{{item.remark}}">
+          <text class="res-label">备注</text>
+          <text class="res-value">{{item.remark}}</text>
+        </view>
+      </view>
+      <view class="res-actions">
+        <button class="res-cancel" wx:if="{{item.canCancel}}" catchtap="cancel" data-index="{{index}}">取消预约</button>
+        <button class="res-again" catchtap="goReservation">再约一桌</button>
+      </view>
+    </view>
+  </view>
+
+  <view class="empty" wx:if="{{!list.length && !loading}}">
+    <view class="empty-icon">◷</view>
+    <view class="empty-title">还没有预约</view>
+    <view class="empty-desc">提前留一张好桌，到店就能慢慢吃</view>
+    <button class="btn-ghost empty-btn" bindtap="goReservation">去预约</button>
+  </view>
+
+  <view class="loading-line" wx:if="{{loading}}">正在加载预约…</view>
+
+  <view class="add-bar" wx:if="{{list.length}}">
+    <button class="btn-primary" bindtap="goReservation">＋ 新增预约</button>
+  </view>
+</view>

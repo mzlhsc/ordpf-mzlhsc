@@ -1,0 +1,136 @@
+.orders-page {
+  min-height: 100vh;
+  padding: 20rpx 28rpx 60rpx;
+}
+
+.tabs {
+  white-space: nowrap;
+  margin-bottom: 20rpx;
+}
+
+.tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 62rpx;
+  margin-right: 14rpx;
+  padding: 0 26rpx;
+  border-radius: 999rpx;
+  background: #fff;
+  color: #756d66;
+  font-size: 24rpx;
+  box-shadow: 0 4rpx 14rpx rgba(75, 47, 31, 0.05);
+}
+
+.tab.active {
+  background: #2d211b;
+  color: #fff;
+  font-weight: 600;
+}
+
+.order-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18rpx;
+}
+
+.order-card {
+  padding: 24rpx;
+  border-radius: 24rpx;
+  background: #fff;
+  box-shadow: 0 8rpx 24rpx rgba(75, 47, 31, 0.055);
+}
+
+.order-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.order-no {
+  color: #8d857e;
+  font-size: 23rpx;
+  letter-spacing: 0.5rpx;
+}
+
+.order-status {
+  font-size: 25rpx;
+  font-weight: 700;
+}
+
+.order-status.warning { color: #e58a1c; }
+.order-status.primary { color: #e95828; }
+.order-status.success { color: #26915c; }
+.order-status.muted { color: #9b948d; }
+
+.order-dishes {
+  margin-top: 14rpx;
+  font-size: 28rpx;
+  font-weight: 600;
+  line-height: 1.55;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+.order-meta {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  margin-top: 10rpx;
+  color: #a29a93;
+  font-size: 21rpx;
+}
+
+.order-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 18rpx;
+  padding-top: 18rpx;
+  border-top: 1rpx solid #f3eee9;
+}
+
+.order-amount {
+  display: flex;
+  align-items: baseline;
+  gap: 8rpx;
+}
+
+.amount-label {
+  color: #9d958e;
+  font-size: 21rpx;
+}
+
+.order-amount .price {
+  font-size: 32rpx;
+}
+
+.order-actions {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.action-btn {
+  height: 56rpx;
+  padding: 0 20rpx;
+  border: 1rpx solid #eee8e2;
+  border-radius: 999rpx;
+  background: #fff;
+  color: #756d66;
+  font-size: 22rpx;
+  line-height: 54rpx;
+}
+
+.action-btn.primary {
+  border-color: #ffd3c2;
+  background: #fff5ef;
+  color: #e95828;
+  font-weight: 600;
+}
+
+.empty-btn {
+  margin-top: 28rpx;
+}

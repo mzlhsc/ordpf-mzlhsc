@@ -1,0 +1,33 @@
+<view class="address-page">
+  <view class="address-list" wx:if="{{list.length}}">
+    <view class="address-card" wx:for="{{list}}" wx:key="id" data-index="{{index}}" bindtap="onCardTap">
+      <view class="card-top">
+        <view class="user-line">
+          <text class="consignee">{{item.consignee}}</text>
+          <text class="phone">{{item.phone}}</text>
+          <text class="default-tag" wx:if="{{item.isDefault}}">默认</text>
+          <text class="label-tag" wx:if="{{item.label}}">{{item.label}}</text>
+        </view>
+        <view class="select-mark" wx:if="{{selectMode}}">选择 ›</view>
+      </view>
+      <view class="address-text">{{item.fullText}}</view>
+      <view class="card-actions" wx:if="{{!selectMode}}" catchtap="noop">
+        <button class="mini-action" catchtap="setDefault" data-index="{{index}}" wx:if="{{!item.isDefault}}">设为默认</button>
+        <button class="mini-action" catchtap="edit" data-index="{{index}}">编辑</button>
+        <button class="mini-action danger" catchtap="remove" data-index="{{index}}">删除</button>
+      </view>
+    </view>
+  </view>
+
+  <view class="empty" wx:if="{{!list.length && !loading}}">
+    <view class="empty-icon">⌂</view>
+    <view class="empty-title">还没有收货地址</view>
+    <view class="empty-desc">添加地址后，外卖就能送到你手上</view>
+  </view>
+
+  <view class="loading-line" wx:if="{{loading}}">正在加载地址…</view>
+
+  <view class="add-bar">
+    <button class="btn-primary" bindtap="add">＋ 新增收货地址</button>
+  </view>
+</view>

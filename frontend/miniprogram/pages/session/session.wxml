@@ -1,0 +1,145 @@
+<view class="session-page" wx:if="{{session}}">
+  <view class="table-hero">
+    <view class="hero-top">
+      <view>
+        <view class="hero-label">TABLE · {{session.tableLabel}}</view>
+        <view class="hero-title">{{session.tableName}}</view>
+      </view>
+      <view class="hero-status status-{{session.status}}">{{session.statusText}}</view>
+    </view>
+    <view class="hero-meta">
+      <text>{{session.guestCount}} 人</text>
+      <text class="dot">·</text>
+      <text>{{session.memberCount}} 位同桌</text>
+      <text class="dot">·</text>
+      <text>{{session.openTimeText}} 开台</text>
+    </view>
+    <view class="hero-no" bindtap="copyNo">
+      <text>{{session.sessionNo}}</text>
+      <text class="copy">复制</text>
+    </view>
+  </view>
+
+  <view class="bill-card">
+    <view class="bill-main">
+      <view class="bill-label">当前账单</view>
+      <view class="bill-amount"><text class="bill-symbol">¥</text>{{session.totalAmountText}}</view>
+      <view class="bill-hint">已提交订单金额，不含待下单菜品</view>
+    </view>
+    <view class="bill-stats">
+      <view class="bill-stat">
+        <view class="stat-label">已付</view>
+        <view class="stat-value">¥{{session.paidAmountText}}</view>
+      </view>
+      <view class="bill-stat">
+        <view class="stat-label">待付</view>
+        <view class="stat-value">¥{{session.unpaidAmountText}}</view>
+      </view>
+      <view class="bill-stat" wx:if="{{session.aaEnabled}}">
+        <view class="stat-label">人均</view>
+        <view class="stat-value">¥{{session.perPersonAmountText}}</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="members-card card">
+    <view class="card-head">
+      <view class="card-title">同桌成员</view>
+      <view class="card-sub">{{session.memberCount}} 人</view>
+    </view>
+    <scroll-view class="member-scroll" scroll-x enable-flex show-scrollbar="{{false}}">
+      <view class="member" wx:for="{{session.members}}" wx:key="id">
+        <view class="avatar {{item.isOwner ? 'owner' : ''}}">{{item.initial}}</view>
+        <view class="member-name">{{item.nickname}}</view>
+        <view class="member-role">{{item.roleText}}</view>
+      </view>
+    </scroll-view>
+    <view class="aa-tip" wx:if="{{session.aaEnabled}}">AA 已开启，每人应付 ¥{{session.perPersonAmountText}}</view>
+  </view>
+
+  <view class="card cart-card">
+    <view class="card-head">
+      <view>
+        <view class="card-title">同桌菜单</view>
+        <view class="card-sub">未下单，可继续加减</view>
+      </view>
+      <view class="head-actions">
+        <button class="head-btn" bindtap="goAddDish">＋ 加菜</button>
+        <button class="head-btn muted" wx:if="{{session.cartItems.length}}" bindtap="clearCart">清空</button>
+      </view>
+    </view>
+    <view class="cart-item" wx:for="{{session.cartItems}}" wx:key="id">
+      <view class="cart-pic">
+        <image wx:if="{{item.image}}" src="{{item.image}}" mode="aspectFill"></image>
+        <view wx:else class="pic-fallback">味</view>
+      </view>
+      <view class="cart-main">
+        <view class="cart-name">{{item.name}}</view>
+        <view class="cart-flavor" wx:if="{{item.dishFlavor}}">{{item.dishFlavor}}</view>
+        <view class="cart-unit">¥{{item.priceText}} / 份</view>
+      </view>
+      <view class="cart-side">
+        <view class="cart-line">¥{{item.lineTotal}}</view>
+        <view class="stepper">
+          <button class="step-btn" catchtap="minusCart" data-index="{{index}}">−</button>
+          <text class="step-num">{{item.number}}</text>
+          <button class="step-btn plus" catchtap="plusCart" data-index="{{index}}">＋</button>
+        </view>
+      </view>
+    </view>
+    <view class="cart-empty" wx:if="{{!session.cartItems.length}}">
+      <view class="cart-empty-text">还没点菜，喊同桌一起选吧</view>
+      <button class="btn-ghost" bindtap="goAddDish">去加菜</button>
+    </view>
+    <view class="cart-foot" wx:if="{{session.cartItems.length}}">
+      <text>{{cartCount}} 份 · 小计</text>
+      <text class="cart-total">¥{{cartAmountText}}</text>
+    </view>
+  </view>
+
+  <view class="card orders-card">
+    <view class="card-head">
+      <view class="card-title">已下单菜品</view>
+      <view class="card-sub">{{session.orders.length}} 笔</view>
+    </view>
+    <view class="order-line" wx:for="{{session.orders}}" wx:key="id">
+      <view class="order-left">
+        <view class="order-no">No. {{item.number}}</view>
+        <view class="order-time">{{item.timeText}}</view>
+      </view>
+      <view class="order-right">
+        <view class="order-status">{{item.statusText}}</view>
+        <view class="order-amount">¥{{item.amountText}}</view>
+      </view>
+    </view>
+    <view class="order-empty" wx:if="{{!session.orders.length}}">提交同桌菜单后，订单会显示在这里</view>
+  </view>
+
+  <view class="bottom-space"></view>
+
+  <view class="action-bar" wx:if="{{session.status === 1 || session.status === 2}}">
+    <button class="action-ghost" bindtap="goAddDish" wx:if="{{session.status === 1}}">加菜</button>
+    <button class="action-ghost" bindtap="enableAa" wx:if="{{session.status === 1 && !session.aaEnabled && session.totalAmount > 0}}">开启 AA</button>
+    <button class="action-primary" bindtap="submitOrder" wx:if="{{session.status === 1 && session.cartItems.length}}">提交这桌菜</button>
+    <button class="action-primary" bindtap="requestCheckout" wx:if="{{session.status === 1 && !session.cartItems.length && session.totalAmount > 0}}">申请结账</button>
+    <button class="action-primary" bindtap="aaPay" wx:if="{{session.status === 2 && session.aaEnabled}}">AA 支付 ¥{{session.perPersonAmountText}}</button>
+    <button class="action-primary" bindtap="waitCheckout" wx:if="{{session.status === 2 && !session.aaEnabled}}">等待服务员结账</button>
+  </view>
+</view>
+
+<view class="join-page" wx:if="{{needJoin}}">
+  <view class="join-card">
+    <view class="join-icon">◫</view>
+    <view class="join-title">你还没有加入这桌</view>
+    <view class="join-desc">加入后即可和同桌共享菜单、一起 AA</view>
+    <button class="btn-primary join-btn" bindtap="joinSession">加入同桌</button>
+  </view>
+</view>
+
+<view class="loading-line" wx:if="{{loading}}">正在加载同桌账单…</view>
+<view class="empty" wx:if="{{!loading && !session && !needJoin}}">
+  <view class="empty-icon">◫</view>
+  <view class="empty-title">会话不存在或已结束</view>
+  <button class="btn-ghost empty-btn" bindtap="goDining">返回堂食</button>
+</view>
+

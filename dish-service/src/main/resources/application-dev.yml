@@ -1,13 +1,41 @@
-sky:
+spring:
+  # 本地兜底数据源：Nacos 的 shared-jdbc.yaml 不可用时也能启动
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    host: localhost
-    port: 3306
-    database: sky_take_out
+    url: "jdbc:mysql://127.0.0.1:3306/sky_take_out?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&rewriteBatchedStatements=true"
     username: root
     password: root
-  redis:
-    host: localhost
-    port: 6379
-    # 本机 Redis 默认没有密码，留空即可；设置了 requirepass 才填对应密码
-    password: root
+    hikari:
+      pool-name: ordpf-hikari
+      minimum-idle: 2
+      maximum-pool-size: 10
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+  # 本地兜底 Redis：密码与 middleware/redis 的 requirepass=root 保持一致
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      password: root
+      database: 0
+      timeout: 5000ms
+      connect-timeout: 5000ms
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
+          max-wait: 3000ms
+  cloud:
+    sentinel:
+      eager: true
+      transport:
+        dashboard: 127.0.0.1:8088
+        port: 8720
+      log:
+        dir: ./logs/sentinel
+
+mzlhsc:
+  redisson:
+    enabled: true

@@ -19,6 +19,8 @@ spring:
   cloud:
     nacos:
       server-addr: 127.0.0.1:8848 # 注册中心 + 配置中心地址
+      username: nacos
+      password: nacos
 
   main:
     allow-circular-references: true
@@ -41,3 +43,8 @@ mybatis-plus:
     db-config:
       id-type: auto # 全局id类型为自增长
   mapper-locations: "classpath*:/mapper/**/*.xml"
+# 微信登录：本地不填 appid/secret 时，login 会降级为直接使用 code 作为 openid，方便本地联调
+mzlhsc:
+  wechat:
+    appid: ${WECHAT_APPID:}
+    secret: ${WECHAT_SECRET:}

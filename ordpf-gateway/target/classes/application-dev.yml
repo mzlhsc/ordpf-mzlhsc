@@ -1,6 +1,0 @@
-# 网关是纯转发层，不连数据库、不连 Redis，只需要注册中心地址
-# nacos 地址写在 application.yml 里
-spring:
-  cloud:
-    nacos:
-      server-addr: 127.0.0.1:8848

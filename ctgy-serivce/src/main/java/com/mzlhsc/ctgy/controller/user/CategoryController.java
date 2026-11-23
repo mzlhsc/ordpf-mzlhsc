@@ -1,7 +1,6 @@
 package com.mzlhsc.ctgy.controller.user;
 
-
-
+import com.mzlhsc.common.exception.BadRequestException;
 import com.mzlhsc.ctgy.domain.po.Category;
 import com.mzlhsc.ctgy.service.ICategoryService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -16,7 +15,7 @@ import java.util.List;
 
 /**
  * <p>
- * 菜品及套餐分类 前端控制器
+ * 菜品及套餐分类 前端控制器（用户端）
  * </p>
  *
  * @author mzlhsc
@@ -29,29 +28,28 @@ import java.util.List;
 @Slf4j
 public class CategoryController {
 
+    /** 分类状态：1 启用，0 禁用 */
+    private static final int STATUS_ENABLE = 1;
+
     private final ICategoryService categoryService;
 
-
-
     /**
-     * 根据类型查询分类
-     * @param type
-     * @return
+     * 根据类型查询分类（用户端只返回启用状态的分类）
+     *
+     * @param type 1 菜品分类，2 套餐分类
      */
     @GetMapping("/list")
     @Operation(summary = "根据类型查询分类")
-    public List<Category> list(Integer type){
+    public List<Category> list(Integer type) {
         log.info("根据类型查询分类: {}", type);
-
-//        List<Category> list = categoryService.listCategory(type);
-        List<Category> list = categoryService.lambdaQuery().eq(Category::getType,type).list();
-
-
-
-        return list;
+        if (type != null && type != 1 && type != 2) {
+            throw new BadRequestException("分类类型不合法");
+        }
+        return categoryService.lambdaQuery()
+                .eq(type != null, Category::getType, type)
+                .eq(Category::getStatus, STATUS_ENABLE)
+                .orderByAsc(Category::getSort)
+                .list();
     }
-
-
-
 
 }

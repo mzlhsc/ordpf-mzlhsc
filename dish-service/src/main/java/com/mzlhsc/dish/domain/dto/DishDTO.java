@@ -24,6 +24,12 @@ public class DishDTO implements Serializable {
     //描述信息
     private String description;
 
+    //状态 1起售 0停售（不传默认起售）
+    private Integer status;
+
+    //库存，不传默认 100
+    private Integer stock;
+
     //口味（value 支持数组，如 {"name":"甜度","value":["无糖","少糖"]}）
     private List<DishFlavor> flavors = new ArrayList<>();
 

@@ -9,6 +9,7 @@ import com.mzlhsc.dish.domain.vo.DishVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 @Mapper
 public interface DishMapper extends BaseMapper<Dish> {
@@ -26,7 +27,7 @@ public interface DishMapper extends BaseMapper<Dish> {
      * @return
      */
     @Select("select count(id) from dish where category_id = #{categoryId}")
-    Integer countByCategoryId(Long categoryId);
+    Integer countByCategoryId(@Param("categoryId") Long categoryId);
 
 
     /**
@@ -35,6 +36,25 @@ public interface DishMapper extends BaseMapper<Dish> {
      * @return
      */
     @Select("select count(id) from dish where status = #{status}")
-    Integer countByStatus(Integer status);
+    Integer countByStatus(@Param("status") Integer status);
+
+    /**
+     * 条件扣减库存：只有剩余库存足够时才扣，返回受影响行数。
+     */
+    @Update("update dish set stock = stock - #{number}, update_time = now() " +
+            "where id = #{dishId} and stock >= #{number}")
+    int deductStock(@Param("dishId") Long dishId, @Param("number") int number);
+
+    /**
+     * 回补库存。
+     */
+    @Update("update dish set stock = stock + #{number}, update_time = now() where id = #{dishId}")
+    int restoreStock(@Param("dishId") Long dishId, @Param("number") int number);
+
+    /**
+     * 设置绝对库存。
+     */
+    @Update("update dish set stock = #{stock}, update_time = now() where id = #{dishId}")
+    int updateStock(@Param("dishId") Long dishId, @Param("stock") int stock);
 
 }

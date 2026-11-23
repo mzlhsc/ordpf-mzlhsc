@@ -37,8 +37,8 @@ public interface SetmealMapper extends BaseMapper<Setmeal> {
      * @param category_id
      * @return
      */
-    @Select("select count(id) from setmeal where category_id = #{category_id}")
-    Integer countByCategoryId(Long category_id);
+    @Select("select count(id) from setmeal where category_id = #{categoryId}")
+    Integer countByCategoryId(@Param("categoryId") Long categoryId);
 
     /**
      * 按状态统计套餐数量（工作台套餐总览）
@@ -54,5 +54,5 @@ public interface SetmealMapper extends BaseMapper<Setmeal> {
     @Select("select sd.name, sd.copies, d.image, d.description " +
             "from setmeal_dish sd left join dish d on sd.dish_id = d.id " +
             "where sd.setmeal_id = #{setmealId}")
-    List<DishItemVO> getDishItemBySetmealId(Long setmealId);
+    List<DishItemVO> getDishItemBySetmealId(@Param("setmealId") Long setmealId);
 }

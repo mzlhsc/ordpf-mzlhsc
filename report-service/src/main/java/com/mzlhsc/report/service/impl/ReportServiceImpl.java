@@ -5,6 +5,7 @@ import com.mzlhsc.api.dto.DateCountDTO;
 import com.mzlhsc.api.dto.GoodsSalesDTO;
 import com.mzlhsc.api.client.OrderClient;
 import com.mzlhsc.api.client.UserClient;
+import com.mzlhsc.common.exception.BadRequestException;
 import com.mzlhsc.common.exception.CommonException;
 import com.mzlhsc.report.domain.vo.BusinessDataVO;
 import com.mzlhsc.report.domain.vo.OrderReportVO;
@@ -27,6 +28,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -53,6 +55,7 @@ public class ReportServiceImpl implements IReportService {
      */
     @Override
     public TurnoverReportVO getTurnoverStatistics(LocalDate begin, LocalDate end) {
+        validateRange(begin, end);
         // 从 begin 到 end 之间的每一天
         List<LocalDate> dateList = buildDateList(begin, end);
 
@@ -84,6 +87,7 @@ public class ReportServiceImpl implements IReportService {
      */
     @Override
     public UserReportVO getUserStatistics(LocalDate begin, LocalDate end) {
+        validateRange(begin, end);
         List<LocalDate> dateList = buildDateList(begin, end);
 
         // 每日新增用户，区间内缺失的日期补 0
@@ -124,6 +128,7 @@ public class ReportServiceImpl implements IReportService {
      */
     @Override
     public OrderReportVO getOrderStatistics(LocalDate begin, LocalDate end) {
+        validateRange(begin, end);
         List<LocalDate> dateList = buildDateList(begin, end);
 
         List<Integer> orderCountList = new ArrayList<>();
@@ -159,6 +164,7 @@ public class ReportServiceImpl implements IReportService {
      */
     @Override
     public SalesTop10ReportVO getSalesTop10(LocalDate begin, LocalDate end) {
+        validateRange(begin, end);
         List<GoodsSalesDTO> salesTop10 = orderClient.listSalesTop10(begin, end);
         if (salesTop10 == null) {
             salesTop10 = List.of();
@@ -197,7 +203,12 @@ public class ReportServiceImpl implements IReportService {
             throw new CommonException("未找到报表模板：template/运营数据报表模板.xlsx", 500);
         }
 
-        try (XSSFWorkbook excel = new XSSFWorkbook(in)) {
+        // 下载响应头必须在写出流之前设置，否则浏览器拿不到文件名
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setCharacterEncoding("UTF-8");
+        response.setHeader("Content-Disposition", "attachment; filename=business-data.xlsx");
+
+        try (InputStream template = in; XSSFWorkbook excel = new XSSFWorkbook(template)) {
             XSSFSheet sheet = excel.getSheet("Sheet1");
 
             // 时间区间
@@ -244,6 +255,7 @@ public class ReportServiceImpl implements IReportService {
      * 构建 begin 到 end（含首尾）的日期列表
      */
     private List<LocalDate> buildDateList(LocalDate begin, LocalDate end) {
+        validateRange(begin, end);
         List<LocalDate> dateList = new ArrayList<>();
         LocalDate date = begin;
         while (!date.isAfter(end)) {
@@ -251,6 +263,21 @@ public class ReportServiceImpl implements IReportService {
             date = date.plusDays(1);
         }
         return dateList;
+    }
+
+    /**
+     * 校验统计区间：参数不能为空、开始不能晚于结束、区间不超过一年
+     */
+    private void validateRange(LocalDate begin, LocalDate end) {
+        if (begin == null || end == null) {
+            throw new BadRequestException("开始日期和结束日期不能为空");
+        }
+        if (begin.isAfter(end)) {
+            throw new BadRequestException("开始日期不能晚于结束日期");
+        }
+        if (ChronoUnit.DAYS.between(begin, end) > 365) {
+            throw new BadRequestException("统计区间不能超过一年");
+        }
     }
 
     private String joinDate(List<LocalDate> dateList) {

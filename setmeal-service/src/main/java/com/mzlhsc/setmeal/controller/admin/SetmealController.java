@@ -3,6 +3,7 @@ package com.mzlhsc.setmeal.controller.admin;
 
 import com.mzlhsc.common.result.PageDTO;
 import com.mzlhsc.common.result.R;
+import com.mzlhsc.common.exception.BadRequestException;
 import com.mzlhsc.setmeal.domain.dto.SetmealDTO;
 import com.mzlhsc.setmeal.domain.dto.SetmealPageQueryDTO;
 import com.mzlhsc.setmeal.domain.po.Setmeal;
@@ -119,9 +120,18 @@ public class SetmealController {
      * @return
      */
     @PostMapping("/status/{status}")
-    @Operation(summary = "启用、禁用分类")
-    public R<Boolean> status(@PathVariable Integer status, Long id){
-        log.info("启用、禁用分类: {} {}", status,id);
+    @Operation(summary = "启用、禁用套餐")
+    public R<Boolean> status(@PathVariable Integer status, @RequestParam Long id) {
+        log.info("启用、禁用套餐: {} {}", status, id);
+        if (id == null) {
+            throw new BadRequestException("套餐id不能为空");
+        }
+        if (status == null || status != 0 && status != 1) {
+            throw new BadRequestException("套餐状态不合法");
+        }
+        if (setmealService.getById(id) == null) {
+            throw new BadRequestException("套餐不存在");
+        }
         return R.ok(setmealService.updateById(Setmeal.builder().id(id).status(status).build()));
     }
 

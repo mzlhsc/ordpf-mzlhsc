@@ -2,6 +2,7 @@ package com.mzlhsc.order.mapper;
 
 import com.mzlhsc.order.domain.po.OrderDetail;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
@@ -11,15 +12,12 @@ public interface OrderDetailMapper {
 
     /**
      * 根据订单id查询订单明细
-     * @param orderId
-     * @return
      */
     @Select("select * from order_detail where order_id = #{orderId}")
-    List<OrderDetail> getByOrderId(Long orderId);
+    List<OrderDetail> getByOrderId(@Param("orderId") Long orderId);
 
     /**
      * 批量插入订单明细数据
-     * @param orderDetails
      */
-    void insertBatch(List<OrderDetail> orderDetails);
+    void insertBatch(@Param("orderDetails") List<OrderDetail> orderDetails);
 }

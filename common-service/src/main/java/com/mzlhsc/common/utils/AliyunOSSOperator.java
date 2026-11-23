@@ -7,6 +7,7 @@ import com.aliyun.oss.OSSClientBuilder;
 import com.aliyun.oss.common.auth.CredentialsProviderFactory;
 import com.aliyun.oss.common.auth.DefaultCredentialProvider;
 import com.aliyun.oss.common.comm.SignVersion;
+import com.mzlhsc.common.exception.BizIllegalException;
 import com.mzlhsc.common.properties.AliyunOSSProperties;
 import jakarta.annotation.PreDestroy;
 import lombok.extern.slf4j.Slf4j;
@@ -20,8 +21,9 @@ import java.util.UUID;
 /**
  * 阿里云 OSS 上传工具。
  * <p>
- * OSS 客户端是线程安全的，这里只创建一次、随应用关闭而释放，
- * 不要每次上传都 OSSClientBuilder.create() 再 shutdown()（那样每次都要重新握手）。
+ * 客户端延迟初始化：没有配置 AccessKey 时应用仍可正常启动，
+ * 只有真正调用上传接口时才提示缺少配置，避免因为一个可选功能拖垮整个服务。
+ * OSS 客户端是线程安全的，只创建一次、随应用关闭而释放。
  */
 @Slf4j
 @Component
@@ -29,40 +31,11 @@ public class AliyunOSSOperator {
 
     private final AliyunOSSProperties properties;
 
-    /** 全局复用的 OSS 客户端 */
-    private final OSS ossClient;
+    /** 全局复用的 OSS 客户端，延迟初始化 */
+    private volatile OSS ossClient;
 
     public AliyunOSSOperator(AliyunOSSProperties properties) {
         this.properties = properties;
-
-        ClientBuilderConfiguration conf = new ClientBuilderConfiguration();
-        // V4 签名（2024 年后新建 Bucket 强制要求）
-        conf.setSignatureVersion(SignVersion.V4);
-
-        // 3.18.x 起 create() 返回的是内部构建器类型，用 var 接收
-        var builder = OSSClientBuilder.create()
-                .endpoint(properties.getEndpoint())
-                .clientConfiguration(conf)
-                .region(properties.getRegion());
-
-        // 凭证优先级：配置文件 > 环境变量
-        if (StrUtil.isNotBlank(properties.getAccessKeyId())) {
-            builder.credentialsProvider(new DefaultCredentialProvider(
-                    properties.getAccessKeyId(), properties.getAccessKeySecret()));
-        } else {
-            // 3.18.x 里 newEnvironmentVariableCredentialsProvider() 会抛受检异常
-            try {
-                builder.credentialsProvider(
-                        CredentialsProviderFactory.newEnvironmentVariableCredentialsProvider());
-            } catch (Exception e) {
-                throw new IllegalStateException(
-                        "未配置 AccessKey：请在 mzlhsc.aliyun.access-key-id 填写，或设置环境变量 OSS_ACCESS_KEY_ID / OSS_ACCESS_KEY_SECRET", e);
-            }
-        }
-
-        this.ossClient = builder.build();
-        log.info("OSS 客户端初始化完成: endpoint={}, bucket={}",
-                properties.getEndpoint(), properties.getBucketName());
     }
 
     /**
@@ -73,11 +46,62 @@ public class AliyunOSSOperator {
      * @return 可访问的 URL
      */
     public String upload(byte[] content, String originalFilename) {
+        if (content == null || content.length == 0) {
+            throw new BizIllegalException("上传文件内容不能为空");
+        }
         String objectName = buildObjectName(originalFilename);
-        ossClient.putObject(properties.getBucketName(), objectName, new ByteArrayInputStream(content));
+        getClient().putObject(properties.getBucketName(), objectName, new ByteArrayInputStream(content));
         String url = buildUrl(objectName);
         log.info("文件上传成功: {}", url);
         return url;
+    }
+
+    private OSS getClient() {
+        if (ossClient == null) {
+            synchronized (this) {
+                if (ossClient == null) {
+                    ossClient = createClient();
+                }
+            }
+        }
+        return ossClient;
+    }
+
+    private OSS createClient() {
+        if (StrUtil.isBlank(properties.getEndpoint())
+                || StrUtil.isBlank(properties.getBucketName())
+                || StrUtil.isBlank(properties.getRegion())) {
+            throw new BizIllegalException("OSS 配置不完整：请配置 mzlhsc.aliyun.endpoint/bucket-name/region");
+        }
+
+        ClientBuilderConfiguration conf = new ClientBuilderConfiguration();
+        // V4 签名（2024 年后新建 Bucket 强制要求）
+        conf.setSignatureVersion(SignVersion.V4);
+
+        var builder = OSSClientBuilder.create()
+                .endpoint(properties.getEndpoint())
+                .clientConfiguration(conf)
+                .region(properties.getRegion());
+
+        // 凭证优先级：配置文件 > 环境变量
+        if (StrUtil.isNotBlank(properties.getAccessKeyId())) {
+            builder.credentialsProvider(new DefaultCredentialProvider(
+                    properties.getAccessKeyId(), properties.getAccessKeySecret()));
+        } else {
+            try {
+                builder.credentialsProvider(
+                        CredentialsProviderFactory.newEnvironmentVariableCredentialsProvider());
+            } catch (Exception e) {
+                throw new BizIllegalException(
+                        "未配置 OSS AccessKey：请在 mzlhsc.aliyun.access-key-id 填写，"
+                                + "或设置环境变量 OSS_ACCESS_KEY_ID / OSS_ACCESS_KEY_SECRET");
+            }
+        }
+
+        OSS client = builder.build();
+        log.info("OSS 客户端初始化完成: endpoint={}, bucket={}",
+                properties.getEndpoint(), properties.getBucketName());
+        return client;
     }
 
     /**
@@ -99,6 +123,9 @@ public class AliyunOSSOperator {
     private String buildUrl(String objectName) {
         String endpoint = properties.getEndpoint();
         String host = endpoint.substring(endpoint.indexOf("//") + 2);
+        if (host.endsWith("/")) {
+            host = host.substring(0, host.length() - 1);
+        }
         return "https://" + properties.getBucketName() + "." + host + "/" + objectName;
     }
 

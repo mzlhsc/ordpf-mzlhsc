@@ -1,0 +1,196 @@
+/* ordpf 餐饮微信小程序 · 全局样式 */
+page {
+  background: #f7f4ef;
+  color: #2b2b2b;
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+  font-size: 28rpx;
+  line-height: 1.5;
+}
+
+view, text, image, button, input, textarea, picker, scroll-view {
+  box-sizing: border-box;
+}
+
+button {
+  margin: 0;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  font-size: inherit;
+  line-height: inherit;
+  color: inherit;
+}
+
+button::after {
+  border: none;
+}
+
+image {
+  display: block;
+}
+
+.card {
+  background: #ffffff;
+  border-radius: 24rpx;
+  box-shadow: 0 8rpx 28rpx rgba(75, 47, 31, 0.06);
+}
+
+.safe-bottom {
+  padding-bottom: calc(24rpx + env(safe-area-inset-bottom));
+}
+
+.page-pad {
+  padding: 24rpx 28rpx 180rpx;
+}
+
+.price {
+  color: #ff5a1f;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.price-symbol {
+  font-size: 22rpx;
+  margin-right: 2rpx;
+}
+
+.muted {
+  color: #9a958f;
+}
+
+.small {
+  font-size: 24rpx;
+}
+
+.ellipsis {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  height: 38rpx;
+  padding: 0 14rpx;
+  border-radius: 999rpx;
+  background: #fff0e8;
+  color: #e95828;
+  font-size: 22rpx;
+}
+
+.tag-green {
+  background: #eaf8ef;
+  color: #1f9d55;
+}
+
+.tag-gray {
+  background: #f2f1ef;
+  color: #8a8580;
+}
+
+.btn-primary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 88rpx;
+  border-radius: 999rpx;
+  background: linear-gradient(135deg, #ff7b45, #ff5a1f);
+  color: #fff;
+  font-weight: 600;
+  font-size: 30rpx;
+  box-shadow: 0 12rpx 24rpx rgba(255, 90, 31, 0.24);
+}
+
+.btn-primary.is-disabled {
+  background: #d9d5d1;
+  box-shadow: none;
+  color: #fff;
+}
+
+.btn-ghost {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 72rpx;
+  padding: 0 28rpx;
+  border: 1rpx solid #ffd3c2;
+  border-radius: 999rpx;
+  color: #e95828;
+  background: #fff7f2;
+  font-size: 26rpx;
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 100rpx 30rpx;
+  color: #aaa39c;
+}
+
+.empty-icon {
+  width: 128rpx;
+  height: 128rpx;
+  border-radius: 50%;
+  background: #fff1e8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 54rpx;
+  margin-bottom: 24rpx;
+}
+
+.empty-title {
+  font-size: 30rpx;
+  color: #6d6761;
+  margin-bottom: 8rpx;
+}
+
+.empty-desc {
+  font-size: 24rpx;
+  color: #a9a39d;
+  text-align: center;
+}
+
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 34rpx 4rpx 18rpx;
+}
+
+.section-title {
+  font-size: 34rpx;
+  font-weight: 700;
+  letter-spacing: 1rpx;
+}
+
+.section-sub {
+  font-size: 24rpx;
+  color: #a19a93;
+}
+
+.divider {
+  height: 1rpx;
+  background: #f1ece6;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  height: 34rpx;
+  width: 34rpx;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 22rpx;
+  font-weight: 700;
+}
+
+.loading-line {
+  text-align: center;
+  color: #a9a39d;
+  font-size: 24rpx;
+  padding: 30rpx 0;
+}

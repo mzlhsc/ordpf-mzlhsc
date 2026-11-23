@@ -6,11 +6,16 @@ import com.mzlhsc.common.exception.DbException;
 import com.mzlhsc.common.utils.WebUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 import com.mzlhsc.common.result.R;
 
 import java.util.stream.Collectors;
@@ -52,9 +57,47 @@ public class CommonExceptionAdvice {
         return processResponse(new BadRequestException("请求参数格式错误"));
     }
 
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public Object handleTypeMismatch(MethodArgumentTypeMismatchException e) {
+        log.warn("参数类型不正确 -> {}={}", e.getName(), e.getValue());
+        return processResponse(new CommonException("参数类型不正确", 400));
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public Object handleMissingParameter(MissingServletRequestParameterException e) {
+        log.warn("缺少请求参数 -> {}", e.getParameterName());
+        return processResponse(new CommonException("缺少请求参数：" + e.getParameterName(), 400));
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public Object handleNotReadable(HttpMessageNotReadableException e) {
+        log.warn("请求体格式不正确 -> {}", e.getMessage());
+        return processResponse(new CommonException("请求体格式不正确", 400));
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public Object handleNoResourceFound(NoResourceFoundException e) {
+        log.warn("接口不存在 -> {}", e.getResourcePath());
+        return processResponse(new CommonException("接口不存在", 404));
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public Object handleMethodNotSupported(HttpRequestMethodNotSupportedException e) {
+        log.warn("请求方法不支持 -> {}", e.getMessage());
+        return processResponse(new CommonException("请求方法不支持", 405));
+    }
+
     @ExceptionHandler(Exception.class)
     public Object handleRuntimeException(Exception e) {
-        log.error("其他异常 uri : {} -> ", WebUtils.getRequest().getRequestURI(), e);
+        String uri = "unknown";
+        try {
+            if (WebUtils.getRequest() != null) {
+                uri = WebUtils.getRequest().getRequestURI();
+            }
+        } catch (Exception ignored) {
+            // 非 Web 线程（如异步线程）取不到请求信息，忽略即可
+        }
+        log.error("其他异常 uri : {} -> ", uri, e);
         return processResponse(new CommonException("服务器内部异常", 500));
     }
 

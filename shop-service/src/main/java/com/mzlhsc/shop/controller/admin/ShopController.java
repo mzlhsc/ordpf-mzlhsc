@@ -1,5 +1,6 @@
 package com.mzlhsc.shop.controller.admin;
 
+import com.mzlhsc.common.exception.BadRequestException;
 import com.mzlhsc.common.result.R;
 import com.mzlhsc.shop.constant.ShopConstant;
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,6 +31,9 @@ public class ShopController {
     @PutMapping("/{status}")
     @Operation(summary = "设置店铺营业状态", description = "1 营业中，0 打烊中")
     public R<Void> setStatus(@PathVariable Integer status){
+        if (status == null || status != 0 && status != 1) {
+            throw new BadRequestException("营业状态只能是 0 或 1");
+        }
         log.info("设置营业状态为：{}", status == 1 ? "营业中" : "打烊中");
 
         redisTemplate.opsForValue().set(ShopConstant.KEY, status);

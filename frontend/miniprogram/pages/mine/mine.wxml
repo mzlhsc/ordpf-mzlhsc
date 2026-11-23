@@ -1,0 +1,82 @@
+<view class="mine-page">
+  <view class="profile-hero">
+    <view class="profile-orb"></view>
+    <view class="profile-top">
+      <view class="avatar-lg">{{avatarLetter}}</view>
+      <view class="profile-info" wx:if="{{hasLogin}}">
+        <view class="profile-name">{{user.name}}</view>
+        <view class="profile-id">ordpf 会员 · {{openidShort}}</view>
+      </view>
+      <view class="profile-info" wx:else>
+        <view class="profile-name">还未登录</view>
+        <view class="profile-id">登录后可使用购物车、订单与预约</view>
+      </view>
+      <button class="login-btn" wx:if="{{!hasLogin}}" bindtap="login">登录</button>
+    </view>
+    <view class="profile-foot">
+      <view class="foot-item">
+        <view class="foot-num">{{hasLogin ? '1' : '—'}}</view>
+        <view class="foot-label">当前账号</view>
+      </view>
+      <view class="foot-line"></view>
+      <view class="foot-item">
+        <view class="foot-num">30<text class="foot-unit">min</text></view>
+        <view class="foot-label">平均送达</view>
+      </view>
+      <view class="foot-line"></view>
+      <view class="foot-item">
+        <view class="foot-num">7<text class="foot-unit">天</text></view>
+        <view class="foot-label">可预约</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="service-card">
+    <view class="service-title">我的服务</view>
+    <view class="service-grid">
+      <view class="service-item" bindtap="goOrders">
+        <view class="service-icon">▤</view>
+        <view class="service-text">我的订单</view>
+      </view>
+      <view class="service-item" bindtap="goAddress">
+        <view class="service-icon">⌂</view>
+        <view class="service-text">收货地址</view>
+      </view>
+      <view class="service-item" bindtap="goReservations">
+        <view class="service-icon">◷</view>
+        <view class="service-text">我的预约</view>
+      </view>
+      <view class="service-item" bindtap="goDining">
+        <view class="service-icon">◫</view>
+        <view class="service-text">堂食点餐</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="menu-card">
+    <view class="menu-row" bindtap="goOrders">
+      <view class="menu-left"><text class="menu-icon">▤</text><text>订单记录</text></view>
+      <text class="menu-arrow">›</text>
+    </view>
+    <view class="menu-row" bindtap="goAddress">
+      <view class="menu-left"><text class="menu-icon">⌂</text><text>地址管理</text></view>
+      <text class="menu-arrow">›</text>
+    </view>
+    <view class="menu-row" bindtap="goDining">
+      <view class="menu-left"><text class="menu-icon">▣</text><text>扫码开台 / 堂食</text></view>
+      <text class="menu-arrow">›</text>
+    </view>
+    <view class="menu-row" bindtap="copyServer">
+      <view class="menu-left"><text class="menu-icon">⌁</text><text>接口地址</text></view>
+      <text class="menu-value">{{serverHost}}</text>
+    </view>
+  </view>
+
+  <view class="about-card">
+    <view class="about-brand">ordpf 餐饮</view>
+    <view class="about-desc">外卖 · 堂食 · 同桌共享 · AA 结账</view>
+  </view>
+
+  <button class="logout-btn" wx:if="{{hasLogin}}" bindtap="logout">退出登录</button>
+  <view class="version">ordpf mini program · 2026.11</view>
+</view>

@@ -45,8 +45,10 @@ public class Dish implements Serializable {
     private String description;
 
     @Schema(description = "0 停售 1 起售")
-
     private Integer status;
+
+    @Schema(description = "剩余库存")
+    private Integer stock;
 
     @Schema(description = "创建时间")
     @TableField(fill = FieldFill.INSERT)

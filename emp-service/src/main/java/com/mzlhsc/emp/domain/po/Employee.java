@@ -1,6 +1,7 @@
 package com.mzlhsc.emp.domain.po;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -39,6 +40,7 @@ public class Employee implements Serializable {
     private String username;
 
     @Schema(description = "密码")
+    @JsonIgnore
     private String password;
 
     @Schema(description = "手机号")

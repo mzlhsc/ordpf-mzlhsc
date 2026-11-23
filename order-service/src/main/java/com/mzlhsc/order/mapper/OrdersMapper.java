@@ -41,7 +41,7 @@ public interface OrdersMapper extends BaseMapper<Orders> {
      * @param status
      */
     @Select("select count(id) from orders where status = #{status}")
-    Integer countStatus(Integer status);
+    Integer countStatus(@Param("status") Integer status);
 
     /**
      * 根据时间段和状态统计订单数量（工作台/报表使用）

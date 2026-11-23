@@ -1,9 +1,7 @@
 package com.mzlhsc.dish.controller.user;
 
-
-
+import com.mzlhsc.common.exception.BadRequestException;
 import com.mzlhsc.dish.domain.vo.DishVO;
-import com.mzlhsc.dish.mapper.DishFlavorsMapper;
 import com.mzlhsc.dish.service.IDishService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -16,29 +14,27 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 /**
- * 菜品管理
+ * 菜品管理（用户端）
  */
 @RequestMapping("/user/dish")
 @RestController("userDishController")
 @RequiredArgsConstructor
-@Tag(name = "菜品相关接口",description = "菜品的增删改查接口")
+@Tag(name = "菜品相关接口", description = "菜品的增删改查接口")
 @Slf4j
 public class DishController {
+
     private final IDishService dishService;
-    private final DishFlavorsMapper dishFlavorsMapper;
-
-
-
 
     /**
-     * 根据分类id查询菜品
-     * @param categoryId
-     * @return
+     * 根据分类id查询菜品（只返回起售中的菜品）
      */
     @GetMapping("/list")
     @Operation(summary = "根据分类id查询菜品")
-    public List<DishVO> list(Long categoryId){
-        log.info("根据分类id查询菜品: {}",categoryId);
+    public List<DishVO> list(Long categoryId) {
+        log.info("根据分类id查询菜品: {}", categoryId);
+        if (categoryId == null) {
+            throw new BadRequestException("分类id不能为空");
+        }
         return dishService.listWithFlavor(categoryId);
     }
 

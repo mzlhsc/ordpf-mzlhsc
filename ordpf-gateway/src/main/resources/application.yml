@@ -9,15 +9,89 @@ spring:
     # 注册中心
     nacos:
       server-addr: 127.0.0.1:8848 # nacos地址
+      username: nacos
+      password: nacos
 
     gateway:
       server:
         webflux:
+          globalcors:
+            add-to-simple-url-handler-mapping: true
+            cors-configurations:
+              '[/**]':
+                allowedOriginPatterns: "*"
+                allowedMethods: "*"
+                allowedHeaders: "*"
+                allowCredentials: true
           # 关闭按服务名自动生成路由，全部手动显式配置
           discovery:
             locator:
               enabled: false
           routes:
+            # Knife4j 聚合：每个服务的文档走独立前缀，docs-service 统一展示
+            - id: docs-emp
+              uri: lb://emp-service
+              predicates:
+                - Path=/v3/api-docs/emp
+              filters:
+                - SetPath=/v3/api-docs
+
+            - id: docs-ctgy
+              uri: lb://ctgy-serivce
+              predicates:
+                - Path=/v3/api-docs/ctgy
+              filters:
+                - SetPath=/v3/api-docs
+
+            - id: docs-dish
+              uri: lb://dish-service
+              predicates:
+                - Path=/v3/api-docs/dish
+              filters:
+                - SetPath=/v3/api-docs
+
+            - id: docs-setmeal
+              uri: lb://setmeal-service
+              predicates:
+                - Path=/v3/api-docs/setmeal
+              filters:
+                - SetPath=/v3/api-docs
+
+            - id: docs-order
+              uri: lb://order-service
+              predicates:
+                - Path=/v3/api-docs/order
+              filters:
+                - SetPath=/v3/api-docs
+
+            - id: docs-user
+              uri: lb://user-service
+              predicates:
+                - Path=/v3/api-docs/user
+              filters:
+                - SetPath=/v3/api-docs
+
+            - id: docs-report
+              uri: lb://report-service
+              predicates:
+                - Path=/v3/api-docs/report
+              filters:
+                - SetPath=/v3/api-docs
+
+            - id: docs-shop
+              uri: lb://shop-service
+              predicates:
+                - Path=/v3/api-docs/shop
+              filters:
+                - SetPath=/v3/api-docs
+
+            - id: docs-common
+              uri: lb://common-serivce
+              predicates:
+                - Path=/v3/api-docs/common
+              filters:
+                - SetPath=/v3/api-docs
+
             # 员工服务
             - id: emp-service
               uri: lb://emp-service
@@ -42,11 +116,11 @@ spring:
               predicates:
                 - Path=/admin/setmeal/**,/user/setmeal/**
 
-            # 订单服务（订单 + 购物车）
+            # 订单服务（订单 + 购物车 + 堂食）
             - id: order-service
               uri: lb://order-service
               predicates:
-                - Path=/admin/order/**,/user/order/**,/shopping-cart/**
+                - Path=/admin/order/**,/user/order/**,/shopping-cart/**,/admin/dining/**,/user/dining/**
 
             # 用户服务（用户登录 + 地址簿）
             - id: user-service
@@ -92,6 +166,11 @@ mzlhsc:
       - /user/dish/list
       - /user/setmeal/list
       - /user/setmeal/dish/**
+      # 扫码看桌台不需要登录，开台/加菜等仍需登录
+      - /user/dining/table/list
+      - /user/dining/scan/**
+      # Knife4j 聚合文档
+      - /v3/api-docs/**
 
     admin-include-paths: # 只允许「员工令牌」(请求头 zmlhsc) 访问
       - /admin/**
@@ -100,3 +179,4 @@ mzlhsc:
       - /user/**
       - /addressBook/**
       - /shopping-cart/**
+

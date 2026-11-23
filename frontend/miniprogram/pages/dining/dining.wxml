@@ -1,0 +1,112 @@
+<view class="dining-page">
+  <view class="dining-hero">
+    <view class="hero-top">
+      <view>
+        <view class="hero-eyebrow">DINE IN · 到店</view>
+        <view class="hero-title">坐下来，慢慢吃</view>
+        <view class="hero-desc">扫码开台，和同桌一起点菜、AA 结账</view>
+      </view>
+      <view class="hero-plate">
+        <view class="plate-ring"></view>
+        <text class="plate-glyph">🍽</text>
+      </view>
+    </view>
+    <button class="scan-btn" bindtap="scanTable">
+      <text class="scan-glyph">▣</text>
+      <text>扫码开台 / 加入同桌</text>
+    </button>
+  </view>
+
+  <view class="quick-grid">
+    <view class="quick-card" bindtap="chooseTable">
+      <view class="quick-icon">◫</view>
+      <view class="quick-title">选桌开台</view>
+      <view class="quick-desc">查看空闲桌台</view>
+    </view>
+    <view class="quick-card" bindtap="goReservation">
+      <view class="quick-icon">◷</view>
+      <view class="quick-title">预约留座</view>
+      <view class="quick-desc">提前锁定好位置</view>
+    </view>
+    <view class="quick-card" bindtap="goReservationList">
+      <view class="quick-icon">▤</view>
+      <view class="quick-title">我的预约</view>
+      <view class="quick-desc">查看预约进度</view>
+    </view>
+  </view>
+
+  <view class="session-banner" wx:if="{{activeSession}}">
+    <view class="session-left">
+      <view class="session-label">进行中的堂食</view>
+      <view class="session-title">{{activeSession.tableName}} · {{activeSession.sessionNo}}</view>
+      <view class="session-meta">
+        <text>{{activeSession.guestCount}} 人</text>
+        <text class="meta-dot">·</text>
+        <text>{{activeSession.memberCount}} 位同桌</text>
+        <text class="meta-dot">·</text>
+        <text>{{activeSession.statusText}}</text>
+      </view>
+    </view>
+    <button class="session-btn" bindtap="goActiveSession">继续点餐</button>
+  </view>
+
+  <view class="section-head">
+    <view>
+      <view class="section-title">桌台状态</view>
+      <view class="section-sub">点击空闲桌台即可开台</view>
+    </view>
+    <view class="legend">
+      <text class="legend-dot free"></text><text>空闲</text>
+      <text class="legend-dot busy"></text><text>就餐中</text>
+    </view>
+  </view>
+
+  <view class="area-block" wx:for="{{areas}}" wx:key="name">
+    <view class="area-name">{{item.name}} <text class="area-count">{{item.tables.length}} 桌</text></view>
+    <view class="table-grid">
+      <view
+        class="table-card status-{{item2.status}}"
+        wx:for="{{item.tables}}"
+        wx:for-item="item2"
+        wx:key="id"
+        data-id="{{item2.id}}"
+        data-status="{{item2.status}}"
+        data-session="{{item2.currentSessionId}}"
+        data-seats="{{item2.seats}}"
+        bindtap="onTableTap"
+      >
+        <view class="table-top">
+          <text class="table-name">{{item2.name}}</text>
+          <text class="table-status">{{item2.statusText}}</text>
+        </view>
+        <view class="table-seats">{{item2.seats}} 人桌</view>
+        <view class="table-bottom">
+          <text wx:if="{{item2.status === 0}}">可开台</text>
+          <text wx:elif="{{item2.currentSessionNo}}">{{item2.currentSessionNo}}</text>
+          <text wx:else>就餐中</text>
+          <text class="table-arrow">›</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="empty" wx:if="{{!areas.length && !loading}}">
+    <view class="empty-icon">◫</view>
+    <view class="empty-title">暂时没有可展示的桌台</view>
+  </view>
+  <view class="loading-line" wx:if="{{loading}}">正在加载桌台…</view>
+
+  <view class="reservation-preview" wx:if="{{reservations.length}}">
+    <view class="section-head preview-head">
+      <view class="section-title">我的预约</view>
+      <view class="section-sub" bindtap="goReservationList">全部 ›</view>
+    </view>
+    <view class="reservation-item" wx:for="{{reservations}}" wx:key="id" wx:if="{{index < 2}}">
+      <view class="res-left">
+        <view class="res-table">{{item.tableName || '门店桌台'}}</view>
+        <view class="res-time">{{item.reserveTimeText}}</view>
+      </view>
+      <view class="res-status">{{item.statusText}}</view>
+    </view>
+  </view>
+</view>

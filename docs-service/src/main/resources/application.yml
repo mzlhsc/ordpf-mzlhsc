@@ -1,0 +1,39 @@
+server:
+  port: 8092
+
+spring:
+  application:
+    name: docs-service
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    path: /swagger-ui.html
+    disable-swagger-default-url: true
+    urls:
+      - name: 员工服务
+        url: http://127.0.0.1:8080/v3/api-docs/emp
+      - name: 分类服务
+        url: http://127.0.0.1:8080/v3/api-docs/ctgy
+      - name: 菜品服务
+        url: http://127.0.0.1:8080/v3/api-docs/dish
+      - name: 套餐服务
+        url: http://127.0.0.1:8080/v3/api-docs/setmeal
+      - name: 订单与堂食
+        url: http://127.0.0.1:8080/v3/api-docs/order
+      - name: 用户与地址簿
+        url: http://127.0.0.1:8080/v3/api-docs/user
+      - name: 报表与工作台
+        url: http://127.0.0.1:8080/v3/api-docs/report
+      - name: 店铺营业
+        url: http://127.0.0.1:8080/v3/api-docs/shop
+      - name: 文件上传
+        url: http://127.0.0.1:8080/v3/api-docs/common
+
+knife4j:
+  enable: true
+  setting:
+    language: zh_cn
+    enable-footer: false
+    enable-open-api: true

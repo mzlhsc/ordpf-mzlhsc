@@ -1,0 +1,34 @@
+# ===== 构建产物 =====
+target/
+*.class
+*.jar.original
+build/
+dist/
+
+# ===== IDE =====
+.idea/
+*.iml
+*.iws
+*.ipr
+.vscode/
+*.swp
+
+# ===== 本地运行日志 / 进程 =====
+logs/
+*.log
+*.pid
+
+# ===== Nginx 运行时 =====
+middleware/nginx/logs/
+middleware/nginx/temp/
+
+# ===== 临时与备份 =====
+*.bak
+*.bak.*
+tmp/
+temp/
+*.tmp
+
+# 根目录误放的 META-INF 片段
+/META-INF/
+

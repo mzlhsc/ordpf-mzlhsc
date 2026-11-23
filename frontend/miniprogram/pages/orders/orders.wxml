@@ -1,0 +1,46 @@
+<view class="orders-page">
+  <scroll-view class="tabs" scroll-x enable-flex show-scrollbar="{{false}}">
+    <view
+      wx:for="{{tabs}}"
+      wx:key="value"
+      class="tab {{activeTab === index ? 'active' : ''}}"
+      data-index="{{index}}"
+      bindtap="switchTab"
+    >{{item.label}}</view>
+  </scroll-view>
+
+  <view class="order-list" wx:if="{{orders.length}}">
+    <view class="order-card" wx:for="{{orders}}" wx:key="id" data-id="{{item.id}}" bindtap="openDetail">
+      <view class="order-top">
+        <view class="order-no">No. {{item.number}}</view>
+        <view class="order-status {{item.statusClass}}">{{item.statusText}}</view>
+      </view>
+      <view class="order-dishes">{{item.dishesText}}</view>
+      <view class="order-meta">
+        <text>{{item.timeText}}</text>
+        <text wx:if="{{item.orderType === 2}}" class="tag">堂食</text>
+      </view>
+      <view class="order-bottom">
+        <view class="order-amount">
+          <text class="amount-label">实付</text>
+          <text class="price"><text class="price-symbol">¥</text>{{item.amountText}}</text>
+        </view>
+        <view class="order-actions" catchtap="noop">
+          <button class="action-btn" wx:if="{{item.status === 2}}" catchtap="cancelOrder" data-id="{{item.id}}">取消</button>
+          <button class="action-btn" wx:if="{{item.status === 2 || item.status === 3}}" catchtap="remind" data-id="{{item.id}}">催单</button>
+          <button class="action-btn primary" catchtap="makeAgain" data-id="{{item.id}}">再来一单</button>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="empty" wx:if="{{!orders.length && !loading}}">
+    <view class="empty-icon">▤</view>
+    <view class="empty-title">还没有订单</view>
+    <view class="empty-desc">点一份热乎的，开启今天的好味道</view>
+    <button class="btn-ghost empty-btn" bindtap="goMenu">去点餐</button>
+  </view>
+
+  <view class="loading-line" wx:if="{{loading}}">正在加载订单…</view>
+  <view class="loading-line" wx:if="{{loadingMore}}">正在加载更多…</view>
+</view>

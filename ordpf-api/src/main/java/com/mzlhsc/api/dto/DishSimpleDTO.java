@@ -36,4 +36,7 @@ public class DishSimpleDTO implements Serializable {
 
     /** 0 停售 1 起售 */
     private Integer status;
+
+    /** 剩余库存 */
+    private Integer stock;
 }

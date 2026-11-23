@@ -1,0 +1,48 @@
+<view class="cart-page">
+  <view class="cart-head">
+    <view>
+      <view class="cart-title">我的购物车</view>
+      <view class="cart-sub">共 {{totalCount}} 件商品</view>
+    </view>
+    <button class="clear-btn" wx:if="{{items.length}}" bindtap="clearCart">清空</button>
+  </view>
+
+  <view class="cart-list" wx:if="{{items.length}}">
+    <view class="cart-item" wx:for="{{items}}" wx:key="id">
+      <view class="item-pic">
+        <image wx:if="{{item.image}}" src="{{item.image}}" mode="aspectFill"></image>
+        <view wx:else class="pic-fallback">味</view>
+      </view>
+      <view class="item-main">
+        <view class="item-name">{{item.name}}</view>
+        <view class="item-flavor" wx:if="{{item.dishFlavor}}">{{item.dishFlavor}}</view>
+        <view class="item-price"><text class="price-symbol">¥</text>{{item.priceText}}</view>
+      </view>
+      <view class="item-side">
+        <view class="item-line-total">¥{{item.lineTotal}}</view>
+        <view class="stepper">
+          <button class="step-btn minus" catchtap="minus" data-index="{{index}}">−</button>
+          <text class="step-num">{{item.number}}</text>
+          <button class="step-btn plus" catchtap="plus" data-index="{{index}}">＋</button>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="empty" wx:if="{{!items.length && !loading}}">
+    <view class="empty-icon">▤</view>
+    <view class="empty-title">购物车还是空的</view>
+    <view class="empty-desc">去挑几道喜欢的菜吧</view>
+    <button class="btn-ghost empty-btn" bindtap="goMenu">去点餐</button>
+  </view>
+
+  <view class="loading-line" wx:if="{{loading}}">正在加载购物车…</view>
+
+  <view class="checkout-bar" wx:if="{{items.length}}">
+    <view class="checkout-total">
+      <view class="total-label">合计</view>
+      <view class="total-value"><text class="price-symbol">¥</text>{{totalAmountText}}</view>
+    </view>
+    <button class="checkout-btn" bindtap="goCheckout">去结算（{{totalCount}}）</button>
+  </view>
+</view>

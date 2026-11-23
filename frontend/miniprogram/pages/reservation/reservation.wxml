@@ -1,0 +1,63 @@
+<view class="reservation-page">
+  <view class="res-hero">
+    <view class="res-eyebrow">RESERVATION · 留一张好桌</view>
+    <view class="res-title">为相聚，留个位置</view>
+    <view class="res-desc">最多可预约未来 7 天，同桌 ±90 分钟不冲突</view>
+    <view class="res-deco">
+      <view class="deco-line"></view>
+      <text class="deco-dot">◷</text>
+    </view>
+  </view>
+
+  <view class="form-card">
+    <view class="form-row">
+      <text class="form-label">选择桌台</text>
+      <picker class="form-value" mode="selector" range="{{tableLabels}}" value="{{tableIndex}}" bindchange="onTableChange">
+        <view class="{{tableLabels.length ? 'value-text' : 'ph'}}">{{tableLabels.length ? tableLabels[tableIndex] : '暂无可预约桌台'}} ›</view>
+      </picker>
+    </view>
+    <view class="form-row">
+      <text class="form-label">到店日期</text>
+      <picker class="form-value" mode="date" value="{{date}}" start="{{minDate}}" end="{{maxDate}}" bindchange="onDateChange">
+        <view class="value-text">{{date}} ›</view>
+      </picker>
+    </view>
+    <view class="form-row">
+      <text class="form-label">到店时间</text>
+      <picker class="form-value" mode="selector" range="{{timeList}}" value="{{timeIndex}}" bindchange="onTimeChange">
+        <view class="value-text">{{timeList[timeIndex]}} ›</view>
+      </picker>
+    </view>
+    <view class="form-row">
+      <text class="form-label">就餐人数</text>
+      <picker class="form-value" mode="selector" range="{{guestOptions}}" value="{{guestIndex}}" bindchange="onGuestChange">
+        <view class="value-text">{{guestOptions[guestIndex]}} ›</view>
+      </picker>
+    </view>
+    <view class="form-row last">
+      <text class="form-label">联系人</text>
+      <input class="form-input" placeholder="怎么称呼你" placeholder-class="ph" value="{{contactName}}" bindinput="onContactName" />
+    </view>
+    <view class="form-row last">
+      <text class="form-label">联系电话</text>
+      <input class="form-input" type="number" maxlength="11" placeholder="用于接收预约通知" placeholder-class="ph" value="{{contactPhone}}" bindinput="onContactPhone" />
+    </view>
+    <view class="form-row remark-row">
+      <text class="form-label">备注</text>
+      <textarea class="remark-input" maxlength="80" placeholder="生日、靠窗、儿童椅等需求" placeholder-class="ph" value="{{remark}}" bindinput="onRemark"></textarea>
+    </view>
+  </view>
+
+  <view class="notice-card">
+    <view class="notice-title">温馨提示</view>
+    <view class="notice-line">· 预约提交后，门店确认前可取消</view>
+    <view class="notice-line">· 请按预约时间到店，超过 30 分钟可能释放桌台</view>
+    <view class="notice-line">· 到店后可直接扫码开台，享受同桌点菜</view>
+  </view>
+
+  <view class="submit-bar">
+    <button class="btn-primary {{submitting ? 'is-disabled' : ''}}" bindtap="submit" disabled="{{submitting}}">
+      {{submitting ? '提交中…' : '提交预约'}}
+    </button>
+  </view>
+</view>

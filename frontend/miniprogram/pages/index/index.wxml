@@ -1,0 +1,122 @@
+<view class="home">
+  <view class="hero">
+    <view class="hero-orb orb-a"></view>
+    <view class="hero-orb orb-b"></view>
+    <view class="hero-top">
+      <view class="brand-line">
+        <text class="brand">ordpf</text>
+        <text class="brand-sub">餐饮</text>
+      </view>
+      <view class="shop-state {{shopOpen ? 'on' : 'off'}}">
+        <view class="dot"></view>
+        <text>{{shopOpen ? '营业中' : '休息中'}}</text>
+      </view>
+    </view>
+    <view class="hero-title">今天吃点好的</view>
+    <view class="hero-desc">外卖送到家 · 到店扫码点餐</view>
+    <view class="hero-tags">
+      <text class="hero-tag">现点现做</text>
+      <text class="hero-tag">新鲜食材</text>
+      <text class="hero-tag">堂食聚会</text>
+    </view>
+    <view class="hero-badge">
+      <text class="hero-badge-num">30</text>
+      <text class="hero-badge-unit">分钟</text>
+      <text class="hero-badge-text">平均送达</text>
+    </view>
+  </view>
+
+  <view class="notice" wx:if="{{!shopOpen}}">
+    <text class="notice-icon">!</text>
+    <text>门店当前休息中，可以先浏览菜单</text>
+  </view>
+
+  <scroll-view class="cats" scroll-x enable-flex show-scrollbar="{{false}}">
+    <view
+      wx:for="{{categories}}"
+      wx:key="id"
+      class="cat {{item.id === activeCategory ? 'active' : ''}}"
+      data-id="{{item.id}}"
+      bindtap="selectCategory"
+    >{{item.name}}</view>
+  </scroll-view>
+
+  <block wx:if="{{setmeals.length}}">
+    <view class="section-head">
+      <view>
+        <view class="section-title">超值套餐</view>
+        <view class="section-sub">搭配好，更划算</view>
+      </view>
+    </view>
+    <scroll-view class="setmeal-scroll" scroll-x enable-flex show-scrollbar="{{false}}">
+      <view class="setmeal-card" wx:for="{{setmeals}}" wx:key="id">
+        <view class="setmeal-pic">
+          <image wx:if="{{item.image && !item.imageError}}" src="{{item.image}}" mode="aspectFill" binderror="onImageError" data-id="{{item.id}}" data-kind="setmeal"></image>
+          <view wx:else class="pic-fallback">套</view>
+          <view class="setmeal-badge">套餐</view>
+        </view>
+        <view class="setmeal-name ellipsis">{{item.name}}</view>
+        <view class="setmeal-desc ellipsis">{{item.description || '荤素搭配，一人食也满足'}}</view>
+        <view class="setmeal-bottom">
+          <view class="price"><text class="price-symbol">¥</text>{{item.priceText}}</view>
+          <button class="mini-add" catchtap="addSetmeal" data-id="{{item.id}}">＋</button>
+        </view>
+      </view>
+    </scroll-view>
+  </block>
+
+  <view class="section-head dish-head">
+    <view>
+      <view class="section-title">{{activeCategoryName}}</view>
+      <view class="section-sub">共 {{dishes.length}} 道美味</view>
+    </view>
+    <view class="fresh-tip"><view class="fresh-dot"></view> 现做现出</view>
+  </view>
+
+  <view class="dish-list">
+    <view class="dish-card" wx:for="{{dishes}}" wx:key="id">
+      <view class="dish-pic">
+        <image wx:if="{{item.image && !item.imageError}}" src="{{item.image}}" mode="aspectFill" binderror="onImageError" data-id="{{item.id}}" data-kind="dish"></image>
+        <view wx:else class="pic-fallback">味</view>
+        <view class="sold-out" wx:if="{{item.soldOut}}">售罄</view>
+      </view>
+      <view class="dish-main" bindtap="showDish" data-index="{{index}}">
+        <view class="dish-name">{{item.name}}</view>
+        <view class="dish-desc">{{item.description || '本店招牌，值得一试'}}</view>
+        <view class="dish-meta">
+          <text class="tag" wx:if="{{item.hasStock}}">余 {{item.stock}} 份</text>
+          <text class="tag tag-gray" wx:if="{{item.flavors.length}}">{{item.flavors.length}} 种口味</text>
+        </view>
+        <view class="dish-bottom">
+          <view class="price"><text class="price-symbol">¥</text>{{item.priceText}}</view>
+          <button
+            class="add-btn {{item.soldOut || !shopOpen ? 'disabled' : ''}}"
+            catchtap="addDish"
+            data-id="{{item.id}}"
+          >{{item.soldOut ? '售罄' : '＋'}}</button>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="loading-line" wx:if="{{loading}}">正在加载菜单…</view>
+  <view class="empty" wx:if="{{!loading && !dishes.length}}">
+    <view class="empty-icon">🍽</view>
+    <view class="empty-title">这个分类还没有菜</view>
+    <view class="empty-desc">换个分类看看，或稍后再来</view>
+  </view>
+
+  <view class="cart-bar" wx:if="{{cartCount > 0}}" bindtap="goCart">
+    <view class="cart-icon">
+      <text class="cart-glyph">▤</text>
+      <text class="cart-count">{{cartCount}}</text>
+    </view>
+    <view class="cart-info">
+      <view class="cart-total"><text class="price-symbol">¥</text>{{cartAmountText}}</view>
+      <view class="cart-tip">已选 {{cartCount}} 件商品</view>
+    </view>
+    <view class="cart-go">去结算 <text class="arrow">›</text></view>
+  </view>
+</view>
+
+

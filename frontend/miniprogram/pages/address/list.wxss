@@ -1,0 +1,99 @@
+.address-page {
+  min-height: 100vh;
+  padding: 24rpx 28rpx calc(170rpx + env(safe-area-inset-bottom));
+}
+
+.address-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18rpx;
+}
+
+.address-card {
+  padding: 24rpx;
+  border-radius: 24rpx;
+  background: #fff;
+  box-shadow: 0 8rpx 24rpx rgba(75, 47, 31, 0.055);
+}
+
+.card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.user-line {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12rpx;
+}
+
+.consignee {
+  font-size: 30rpx;
+  font-weight: 700;
+}
+
+.phone {
+  color: #7e756e;
+  font-size: 24rpx;
+}
+
+.default-tag {
+  padding: 2rpx 10rpx;
+  border-radius: 6rpx;
+  background: #fff0e6;
+  color: #ed5a24;
+  font-size: 19rpx;
+}
+
+.label-tag {
+  padding: 2rpx 10rpx;
+  border-radius: 6rpx;
+  background: #f4f1ed;
+  color: #8a8179;
+  font-size: 19rpx;
+}
+
+.select-mark {
+  color: #e95828;
+  font-size: 24rpx;
+  font-weight: 600;
+}
+
+.address-text {
+  margin-top: 12rpx;
+  color: #6f6760;
+  font-size: 25rpx;
+  line-height: 1.5;
+}
+
+.card-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12rpx;
+  margin-top: 16rpx;
+  padding-top: 16rpx;
+  border-top: 1rpx solid #f4efea;
+}
+
+.mini-action {
+  height: 52rpx;
+  padding: 0 22rpx;
+  border: 1rpx solid #eee8e1;
+  border-radius: 999rpx;
+  color: #756d66;
+  font-size: 22rpx;
+  line-height: 50rpx;
+}
+
+.mini-action.danger {
+  color: #c56a4c;
+}
+
+.add-bar {
+  position: fixed;
+  left: 28rpx;
+  right: 28rpx;
+  bottom: calc(24rpx + env(safe-area-inset-bottom));
+}

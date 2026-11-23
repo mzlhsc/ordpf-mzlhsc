@@ -52,11 +52,13 @@ public class SetmealController {
      */
     @GetMapping("/list")
     @Operation(summary = "根据分类id查询套餐")
-    public R<List<Setmeal>> list(Long categoryId){
-
-        List<Setmeal> list =setmealService.lambdaQuery()
-                .eq(Setmeal::getCategoryId,categoryId)
-                .eq(Setmeal::getStatus,StatusConstant.ENABLE)
+    public R<List<Setmeal>> list(Long categoryId) {
+        if (categoryId == null) {
+            throw new com.mzlhsc.common.exception.BadRequestException("分类id不能为空");
+        }
+        List<Setmeal> list = setmealService.lambdaQuery()
+                .eq(Setmeal::getCategoryId, categoryId)
+                .eq(Setmeal::getStatus, StatusConstant.ENABLE)
                 .list();
 
         return R.ok(list);

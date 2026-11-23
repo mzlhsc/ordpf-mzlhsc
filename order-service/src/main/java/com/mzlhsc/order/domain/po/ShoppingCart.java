@@ -58,6 +58,9 @@ public class ShoppingCart implements Serializable {
     @Schema(name = "金额")
     private BigDecimal amount;
 
+    @Schema(name = "堂食会话id，堂食共享购物车使用")
+    private Long diningSessionId;
+
     @Schema(name = "创建时间")
     private LocalDateTime createTime;
 
